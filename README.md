@@ -1,1 +1,1 @@
-# thinking-ai.github.io
+formulafuntion-rgb.github.io
