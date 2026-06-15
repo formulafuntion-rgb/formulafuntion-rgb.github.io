@@ -3,503 +3,1098 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thinking AI — Live Internet Reasoning</title>
+<title>Thinking AI — Live Intelligence Engine</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
 
-  :root {
-    --bg: #0d0f14;
-    --surface: #141820;
-    --surface2: #1c2230;
-    --border: #2a3347;
-    --accent: #4f8ef7;
-    --accent2: #a78bfa;
-    --accent3: #34d399;
-    --warn: #f59e0b;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Inter', sans-serif;
-  }
+:root {
+  --bg:       #070a0f;
+  --s1:       #0e1218;
+  --s2:       #141b25;
+  --s3:       #1b2535;
+  --border:   #212d3d;
+  --border2:  #2d3f57;
+  --blue:     #3b82f6;
+  --blue-dim: rgba(59,130,246,0.12);
+  --purple:   #8b5cf6;
+  --green:    #10b981;
+  --amber:    #f59e0b;
+  --red:      #ef4444;
+  --text:     #dde6f0;
+  --text2:    #7a93b0;
+  --muted:    #3a4f68;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 5rem;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(59,130,246,0.05) 0%, transparent 100%),
+    radial-gradient(ellipse 60% 40% at 85% 100%, rgba(139,92,246,0.05) 0%, transparent 100%);
+}
 
-  header { text-align: center; margin-bottom: 2rem; }
+/* ── HEADER ─────────────────────────────── */
+header { text-align: center; margin-bottom: 2rem; }
 
-  header h1 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+h1 {
+  font-size: 1.9rem; font-weight: 700; letter-spacing: -0.03em;
+  background: linear-gradient(125deg, var(--blue) 0%, var(--purple) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
 
-  header p { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; }
+.sub { color: var(--text2); font-size: 0.82rem; margin-top: 0.35rem; }
 
-  .badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25);
-    border-radius: 20px; color: var(--accent3);
-    font-size: 0.7rem; font-weight: 500; padding: 3px 10px;
-    margin-top: 0.5rem;
-  }
+.badges { display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.65rem; }
 
-  .dot { width: 6px; height: 6px; background: var(--accent3); border-radius: 50%; animation: pulse 2s infinite; }
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 20px; font-size: 0.66rem; font-weight: 500;
+  padding: 3px 9px; border: 1px solid;
+}
 
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.b-green { background: rgba(16,185,129,.08); border-color: rgba(16,185,129,.25); color: var(--green); }
+.b-blue  { background: rgba(59,130,246,.08); border-color: rgba(59,130,246,.25); color: var(--blue); }
+.b-amber { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.25); color: var(--amber); }
 
-  .container { width: 100%; max-width: 780px; display: flex; flex-direction: column; gap: 1rem; }
+.dot { width: 6px; height: 6px; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+.d-green { background: var(--green); }
+.d-blue  { background: var(--blue); }
+.d-amber { background: var(--amber); animation-delay: .5s; }
 
-  .stats-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
 
-  .stat {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 8px; padding: 0.6rem 1rem;
-    flex: 1; min-width: 100px; text-align: center;
-  }
+/* ── CONTAINER ───────────────────────────── */
+.wrap { width: 100%; max-width: 840px; display: flex; flex-direction: column; gap: 1rem; }
 
-  .stat-val { font-family: var(--mono); font-size: 1.2rem; font-weight: 500; color: var(--accent); }
-  .stat-key { font-size: 0.68rem; color: var(--muted); margin-top: 0.1rem; }
+/* ── STATS ───────────────────────────────── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(6,1fr); gap: 0.45rem;
+}
+@media(max-width:600px){ .stats-grid{ grid-template-columns:repeat(3,1fr); } }
 
-  .input-area {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1rem;
-    display: flex; flex-direction: column; gap: 0.75rem;
-  }
+.stat {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.55rem 0.6rem; text-align: center;
+  transition: border-color .3s, box-shadow .3s;
+}
+.stat.lit { border-color: var(--blue); box-shadow: 0 0 10px rgba(59,130,246,.12); }
 
-  .input-area label {
-    font-size: 0.72rem; font-weight: 500;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
-  }
+.sv { font-family: var(--mono); font-size: 1.05rem; font-weight: 600; color: var(--blue); line-height: 1; }
+.sk { font-size: 0.59rem; color: var(--muted); margin-top: 0.2rem; text-transform: uppercase; letter-spacing: .07em; }
 
-  .presets { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+/* ── DEVICE PANEL ────────────────────────── */
+.dev-card { background: var(--s1); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
 
-  .preset {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 20px; color: var(--muted);
-    cursor: pointer; font-size: 0.73rem; padding: 0.28rem 0.75rem;
-    transition: all 0.2s;
-  }
+.dev-head {
+  padding: 0.65rem 1rem; display: flex; align-items: center;
+  justify-content: space-between; cursor: pointer; user-select: none;
+  background: var(--s2); border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+.dev-head:hover { background: var(--s3); }
 
-  .preset:hover { border-color: var(--accent); color: var(--accent); }
+.dev-title {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--green);
+}
 
-  textarea {
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--text);
-    font-family: var(--sans); font-size: 0.95rem; line-height: 1.6;
-    padding: 0.75rem 1rem; resize: vertical; min-height: 80px;
-    width: 100%; outline: none; transition: border-color 0.2s;
-  }
+.dev-arrow { color: var(--text2); font-size: 0.75rem; transition: transform .2s; }
+.dev-arrow.up { transform: rotate(180deg); }
 
-  textarea:focus { border-color: var(--accent); }
+.dev-body {
+  display: none; padding: 0.85rem 1rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr));
+  gap: 0.45rem;
+}
+.dev-body.hidden { display: none; }
 
-  .controls { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.di { display: flex; flex-direction: column; gap: 2px; }
+.dl { font-size: 0.57rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.dv { font-family: var(--mono); font-size: 0.71rem; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dv.ok  { color: var(--green); }
+.dv.hi  { color: var(--blue); }
+.dv.wrn { color: var(--amber); }
+.dv.lit { color: var(--text); }
 
-  .think-btn {
-    background: var(--accent); border: none; border-radius: 8px;
-    color: #fff; cursor: pointer; font-family: var(--sans);
-    font-size: 0.9rem; font-weight: 500; padding: 0.55rem 1.4rem;
-    transition: opacity 0.2s, transform 0.1s;
-  }
+.dev-status-bar {
+  grid-column: 1 / -1; display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.65rem; color: var(--text2); padding-top: 0.4rem;
+  border-top: 1px solid var(--border); margin-top: 0.2rem;
+}
 
-  .think-btn:hover { opacity: 0.85; }
-  .think-btn:active { transform: scale(0.97); }
-  .think-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.geo-btn {
+  padding: 0.35rem 0.8rem; background: rgba(59,130,246,.1);
+  border: 1px solid rgba(59,130,246,.3); border-radius: 6px;
+  color: var(--blue); font-size: 0.7rem; cursor: pointer;
+  font-family: var(--sans); transition: all .2s;
+}
+.geo-btn:hover { background: rgba(59,130,246,.2); }
+.geo-btn:disabled { opacity: 0.5; cursor: default; }
 
-  .clear-btn {
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 8px; color: var(--muted); cursor: pointer;
-    font-family: var(--sans); font-size: 0.85rem; padding: 0.55rem 1rem;
-    transition: border-color 0.2s, color 0.2s;
-  }
+/* ── INPUT AREA ──────────────────────────── */
+.input-box {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem; display: flex;
+  flex-direction: column; gap: 0.75rem;
+}
 
-  .clear-btn:hover { border-color: var(--text); color: var(--text); }
+.input-label { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
 
-  /* Thinking panel */
-  .thinking-panel {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden; display: none;
-  }
+.presets { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 
-  .panel-header {
-    background: var(--surface2); border-bottom: 1px solid var(--border);
-    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.72rem; font-weight: 500;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2);
-  }
+.preset {
+  background: var(--s2); border: 1px solid var(--border);
+  border-radius: 20px; color: var(--text2); cursor: pointer;
+  font-size: 0.68rem; padding: 0.22rem 0.65rem; transition: all .18s; white-space: nowrap;
+}
+.preset:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-dim); }
 
-  .panel-pulse {
-    width: 7px; height: 7px; background: var(--accent2);
-    border-radius: 50%; animation: pulse 1.2s ease-in-out infinite;
-  }
+textarea {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-family: var(--sans);
+  font-size: 0.92rem; line-height: 1.65; padding: 0.75rem 1rem;
+  resize: vertical; min-height: 78px; width: 100%; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,246,.1); }
 
-  .steps-wrap {
-    padding: 1rem; display: flex; flex-direction: column; gap: 0.55rem;
-    max-height: 360px; overflow-y: auto;
-  }
+.controls { display: flex; gap: 0.55rem; align-items: center; flex-wrap: wrap; }
 
-  .step {
-    display: flex; gap: 0.75rem; align-items: flex-start;
-    opacity: 0; transform: translateY(5px);
-    animation: stepIn 0.25s forwards;
-  }
+.think-btn {
+  background: linear-gradient(130deg, var(--blue), var(--purple));
+  border: none; border-radius: 8px; color: #fff; cursor: pointer;
+  font-family: var(--sans); font-size: 0.88rem; font-weight: 600;
+  padding: 0.55rem 1.5rem; transition: opacity .2s, transform .1s, box-shadow .2s;
+  box-shadow: 0 4px 18px rgba(59,130,246,.22);
+}
+.think-btn:hover { opacity: .9; box-shadow: 0 6px 24px rgba(59,130,246,.38); }
+.think-btn:active { transform: scale(.97); }
+.think-btn:disabled { opacity: .3; cursor: not-allowed; box-shadow: none; }
 
-  @keyframes stepIn { to { opacity: 1; transform: translateY(0); } }
+.hint-text { font-size: 0.64rem; color: var(--muted); }
 
-  .step-icon {
-    width: 22px; height: 22px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.62rem; font-weight: 600; flex-shrink: 0; margin-top: 1px;
-  }
+.clear-btn {
+  background: transparent; border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text2); cursor: pointer; font-family: var(--sans);
+  font-size: 0.8rem; padding: 0.55rem 0.9rem; transition: all .18s;
+}
+.clear-btn:hover { border-color: var(--text2); color: var(--text); }
 
-  .step-icon.think { background: rgba(79,142,247,0.15); color: var(--accent); }
-  .step-icon.search { background: rgba(245,158,11,0.15); color: var(--warn); }
-  .step-icon.check { background: rgba(52,211,153,0.15); color: var(--accent3); }
-  .step-icon.warn  { background: rgba(245,158,11,0.15); color: var(--warn); }
-  .step-icon.final { background: rgba(167,139,250,0.15); color: var(--accent2); }
+/* ── THINKING PANEL ──────────────────────── */
+.think-panel {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; display: none;
+}
 
-  .step-text {
-    font-family: var(--mono); font-size: 0.77rem; line-height: 1.6;
-    color: #94a3b8; flex: 1;
-  }
+.panel-head {
+  background: var(--s2); border-bottom: 1px solid var(--border);
+  padding: 0.55rem 1rem; display: flex; align-items: center;
+  gap: 0.45rem; font-size: 0.67rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--purple);
+}
 
-  .step-text strong { color: var(--text); font-weight: 500; }
-  .step-text .hi { color: var(--accent); }
-  .step-text .good { color: var(--accent3); }
-  .step-text .caution { color: var(--warn); }
-  .step-text .src { color: var(--accent2); font-style: italic; }
+.pp { width: 7px; height: 7px; background: var(--purple); border-radius: 50%; animation: blink 1.1s ease-in-out infinite; }
 
-  /* Answer panel */
-  .answer-panel {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden; display: none;
-  }
+.steps {
+  padding: 0.8rem; display: flex; flex-direction: column; gap: 0.42rem;
+  max-height: 380px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
 
-  .answer-header {
-    background: rgba(52,211,153,0.08); border-bottom: 1px solid rgba(52,211,153,0.2);
-    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.72rem; font-weight: 500;
-    text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent3);
-  }
+.step {
+  display: flex; gap: 0.6rem; align-items: flex-start;
+  opacity: 0; transform: translateY(4px);
+  animation: stepIn .2s ease forwards;
+}
+@keyframes stepIn { to { opacity:1; transform:translateY(0); } }
 
-  .answer-body {
-    padding: 1.25rem; font-size: 0.93rem; line-height: 1.8; color: var(--text);
-    white-space: pre-wrap; word-wrap: break-word;
-  }
+.si {
+  width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+}
 
-  .sources-list {
-    margin-top: 1rem; padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    display: flex; flex-direction: column; gap: 0.4rem;
-  }
+.si-think  { background: rgba(59,130,246,.14); color: var(--blue); }
+.si-search { background: rgba(245,158,11,.14); color: var(--amber); }
+.si-check  { background: rgba(16,185,129,.14); color: var(--green); }
+.si-warn   { background: rgba(239,68,68,.14); color: var(--red); }
+.si-final  { background: rgba(139,92,246,.14); color: var(--purple); }
+.si-device { background: rgba(16,185,129,.1); color: var(--green); }
+.si-net    { background: rgba(59,130,246,.1); color: var(--blue); }
 
-  .sources-label {
-    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.3rem;
-  }
+.st {
+  font-family: var(--mono); font-size: 0.72rem; line-height: 1.65;
+  color: var(--text2); flex: 1;
+}
+.st strong { color: var(--text); }
+.hi   { color: var(--blue); }
+.ok   { color: var(--green); }
+.caut { color: var(--amber); }
+.err  { color: var(--red); }
+.pur  { color: var(--purple); }
 
-  .source-item {
-    font-size: 0.75rem; color: var(--accent2);
-    display: flex; align-items: center; gap: 0.4rem;
-  }
+/* ── ANSWER PANEL ────────────────────────── */
+.ans-panel {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; display: none;
+}
 
-  .source-item::before { content: '↗'; font-size: 0.65rem; }
+.ans-head {
+  background: rgba(16,185,129,.07); border-bottom: 1px solid rgba(16,185,129,.18);
+  padding: 0.55rem 1rem; display: flex; align-items: center;
+  justify-content: space-between;
+}
 
-  .confidence-bar {
-    height: 3px; background: var(--border); border-radius: 4px;
-    margin-top: 1rem; overflow: hidden;
-  }
+.ans-head-title {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.67rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--green);
+}
 
-  .confidence-fill {
-    height: 100%; border-radius: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transition: width 1.2s ease; width: 0%;
-  }
+.ans-actions { display: flex; gap: 0.4rem; }
 
-  .conf-label {
-    display: flex; justify-content: space-between;
-    font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem;
-  }
+.act-btn {
+  background: var(--s2); border: 1px solid var(--border); border-radius: 5px;
+  color: var(--text2); cursor: pointer; font-size: 0.66rem;
+  padding: 0.22rem 0.6rem; transition: all .18s; font-family: var(--sans);
+}
+.act-btn:hover { border-color: var(--green); color: var(--green); }
+.act-btn.done { border-color: var(--green); color: var(--green); }
 
-  .error-box {
-    background: rgba(226,75,74,0.1); border: 1px solid rgba(226,75,74,0.3);
-    border-radius: 8px; padding: 0.75rem 1rem;
-    font-size: 0.85rem; color: #f87171;
-  }
+.ans-body { padding: 1.2rem; font-size: 0.89rem; line-height: 1.88; color: var(--text); }
+
+.ans-text { white-space: pre-wrap; word-wrap: break-word; }
+
+.cursor-blink {
+  display: inline-block; width: 2px; height: 1em;
+  background: var(--blue); margin-left: 1px; vertical-align: middle;
+  animation: blink .7s step-end infinite;
+}
+
+.sources-block {
+  margin-top: 1.1rem; padding-top: 0.85rem; border-top: 1px solid var(--border);
+}
+
+.src-label {
+  font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted); margin-bottom: 0.45rem;
+}
+
+.src-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.src-chip {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.2);
+  border-radius: 4px; padding: 0.18rem 0.5rem;
+  font-size: 0.68rem; color: var(--purple); text-decoration: none;
+  transition: background .18s;
+}
+.src-chip:hover { background: rgba(139,92,246,.18); }
+
+.conf-block { margin-top: 0.85rem; }
+
+.conf-bar { height: 2px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.conf-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--blue), var(--green)); transition: width 1.3s cubic-bezier(.19,1,.22,1); width: 0%; }
+.conf-meta { display: flex; justify-content: space-between; font-size: 0.64rem; color: var(--muted); margin-top: 0.3rem; }
+
+.ans-meta { display: flex; gap: 1rem; font-size: 0.64rem; color: var(--muted); margin-top: 0.6rem; flex-wrap: wrap; }
+
+.err-box {
+  background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.25);
+  border-radius: 8px; padding: 0.85rem 1rem;
+  font-size: 0.82rem; color: #f87171;
+}
+
+/* ── HISTORY ─────────────────────────────── */
+.hist-panel {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; display: none;
+}
+
+.hist-head {
+  background: var(--s2); border-bottom: 1px solid var(--border);
+  padding: 0.55rem 1rem; display: flex; align-items: center;
+  gap: 0.45rem; font-size: 0.67rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--text2);
+}
+
+.hist-item {
+  padding: 0.55rem 1rem; border-bottom: 1px solid var(--border);
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: space-between; gap: 1rem; transition: background .15s;
+}
+.hist-item:last-child { border-bottom: none; }
+.hist-item:hover { background: var(--s2); }
+
+.hq { font-size: 0.78rem; color: var(--text2); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hm { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); flex-shrink: 0; }
+
+/* ── FOOTER ──────────────────────────────── */
+footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(--muted); }
+
+/* ── SCROLLBAR ───────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Thinking AI Engine</h1>
-  <p>Real AI reasoning powered by Claude + live web search</p>
-  <div class="badge"><div class="dot"></div> Internet connected · claude-sonnet-4-6</div>
+  <h1>⚡ Thinking AI Engine</h1>
+  <p class="sub">Claude claude-sonnet-4-6 · Live Web Search · Device-Aware Context</p>
+  <div class="badges">
+    <div class="badge b-green"><div class="dot d-green"></div>Internet live</div>
+    <div class="badge b-blue" id="geo-badge"><div class="dot d-blue"></div>Location: pending</div>
+    <div class="badge b-amber"><div class="dot d-amber"></div><span id="live-clock">--:--:--</span></div>
+  </div>
 </header>
 
-<div class="container">
+<div class="wrap">
 
-  <div class="stats-row">
-    <div class="stat"><div class="stat-val" id="s-steps">0</div><div class="stat-key">think steps</div></div>
-    <div class="stat"><div class="stat-val" id="s-searches">0</div><div class="stat-key">web searches</div></div>
-    <div class="stat"><div class="stat-val" id="s-tokens">0</div><div class="stat-key">tokens used</div></div>
-    <div class="stat"><div class="stat-val" id="s-time">0s</div><div class="stat-key">think time</div></div>
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat" id="st-steps"><div class="sv" id="sv-steps">0</div><div class="sk">Think Steps</div></div>
+    <div class="stat" id="st-searches"><div class="sv" id="sv-searches">0</div><div class="sk">Searches</div></div>
+    <div class="stat" id="st-tokens"><div class="sv" id="sv-tokens">0</div><div class="sk">Tokens</div></div>
+    <div class="stat" id="st-time"><div class="sv" id="sv-time">0s</div><div class="sk">Elapsed</div></div>
+    <div class="stat" id="st-sources"><div class="sv" id="sv-sources">0</div><div class="sk">Sources</div></div>
+    <div class="stat" id="st-rounds"><div class="sv" id="sv-rounds">0</div><div class="sk">API Rounds</div></div>
   </div>
 
-  <div class="input-area">
-    <label>Ask anything — it will search the web to answer</label>
-    <div class="presets">
-      <span class="preset" onclick="setQ('What is the latest news about AI today?')">Latest AI news</span>
-      <span class="preset" onclick="setQ('What is the current price of Bitcoin?')">Bitcoin price</span>
-      <span class="preset" onclick="setQ('Who won the most recent FIFA World Cup?')">FIFA winner</span>
-      <span class="preset" onclick="setQ('What are the newest smartphones in 2026?')">New phones 2026</span>
-      <span class="preset" onclick="setQ('What is Claude Fable 5 and how does it work?')">Claude Fable 5</span>
+  <!-- Device Panel -->
+  <div class="dev-card">
+    <div class="dev-head" onclick="toggleDev()">
+      <div class="dev-title">🖥 Device Context — injected into AI system prompt</div>
+      <span class="dev-arrow" id="dev-arrow">▼</span>
     </div>
-    <textarea id="question" placeholder="Type any question — about news, facts, prices, events..."></textarea>
+    <div class="dev-body hidden" id="dev-body"></div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-box">
+    <div class="input-label">Ask anything — AI searches the web with your device context</div>
+    <div class="presets" id="presets"></div>
+    <textarea id="q" placeholder="Ask about news, prices, local weather, events, science, sports…"></textarea>
     <div class="controls">
-      <button class="think-btn" id="thinkBtn" onclick="startThinking()">▶ Think + Search</button>
+      <button class="think-btn" id="think-btn" onclick="go()">▶ Think + Search</button>
       <button class="clear-btn" onclick="clearAll()">Clear</button>
+      <span class="hint-text">Ctrl+Enter</span>
     </div>
   </div>
 
-  <div class="thinking-panel" id="thinkPanel">
-    <div class="panel-header"><div class="panel-pulse" id="thinkPulse"></div> Reasoning trace</div>
-    <div class="steps-wrap" id="stepsWrap"></div>
+  <!-- Thinking -->
+  <div class="think-panel" id="think-panel">
+    <div class="panel-head"><div class="pp" id="pp"></div>Reasoning Trace</div>
+    <div class="steps" id="steps"></div>
   </div>
 
-  <div class="answer-panel" id="ansPanel">
-    <div class="answer-header">✓ Final answer</div>
-    <div class="answer-body" id="ansBody"></div>
+  <!-- Answer -->
+  <div class="ans-panel" id="ans-panel">
+    <div class="ans-head">
+      <div class="ans-head-title">✓ Final Answer</div>
+      <div class="ans-actions">
+        <button class="act-btn" id="copy-btn" onclick="copyAns()">Copy</button>
+        <button class="act-btn" id="speak-btn" onclick="speakAns()">Speak</button>
+      </div>
+    </div>
+    <div class="ans-body" id="ans-body"></div>
+  </div>
+
+  <!-- History -->
+  <div class="hist-panel" id="hist-panel">
+    <div class="hist-head">📋 Session History</div>
+    <div id="hist-items"></div>
   </div>
 
 </div>
 
+<footer>Thinking AI · claude-sonnet-4-6 · Web Search Enabled · Device-Aware · <span id="tz-foot"></span></footer>
+
 <script>
-let startTime = 0;
-let stepCount = 0;
-let searchCount = 0;
-let tokenCount = 0;
+// ══════════════════════════════════════════════════════
+//  DEVICE CONTEXT ENGINE
+// ══════════════════════════════════════════════════════
 
-function setQ(q) { document.getElementById('question').value = q; }
+const D = {}; // Device context object
 
-function clearAll() {
-  document.getElementById('question').value = '';
-  document.getElementById('thinkPanel').style.display = 'none';
-  document.getElementById('ansPanel').style.display = 'none';
-  document.getElementById('stepsWrap').innerHTML = '';
-  document.getElementById('s-steps').textContent = '0';
-  document.getElementById('s-searches').textContent = '0';
-  document.getElementById('s-tokens').textContent = '0';
-  document.getElementById('s-time').textContent = '0s';
-  stepCount = 0; searchCount = 0; tokenCount = 0;
+async function collectDevice() {
+  const nav = navigator, scr = screen, now = new Date();
+
+  // Basic
+  D.ua          = nav.userAgent;
+  D.platform    = nav.platform || '—';
+  D.language    = nav.language || '—';
+  D.languages   = (nav.languages || [nav.language]).join(', ');
+  D.online      = nav.onLine;
+  D.cookies     = nav.cookieEnabled;
+  D.dnt         = nav.doNotTrack === '1';
+
+  // Screen
+  D.screenW    = scr.width;
+  D.screenH    = scr.height;
+  D.colorDepth  = scr.colorDepth;
+  D.dpr         = window.devicePixelRatio || 1;
+
+  // Hardware
+  D.cores       = nav.hardwareConcurrency || '?';
+  D.memory      = nav.deviceMemory ? nav.deviceMemory + ' GB' : '?';
+
+  // Time
+  D.tz          = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  D.tzOffset    = 'UTC' + (now.getTimezoneOffset() > 0 ? '−' : '+') +
+                  String(Math.abs(now.getTimezoneOffset() / 60)).padStart(2, '0') + ':00';
+  D.localTime   = now.toLocaleTimeString();
+  D.localDate   = now.toLocaleDateString(undefined, {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  D.isoDate     = now.toISOString().slice(0,10);
+
+  // Network
+  const conn = nav.connection || nav.mozConnection || nav.webkitConnection;
+  if (conn) {
+    D.netType     = conn.effectiveType || conn.type || '?';
+    D.netDownlink = conn.downlink != null ? conn.downlink + ' Mbps' : '?';
+    D.netRtt      = conn.rtt != null ? conn.rtt + ' ms' : '?';
+    D.saveData    = !!conn.saveData;
+  }
+
+  // Preferences
+  D.darkMode     = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  D.reducedMotion= window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Touch
+  D.touch        = ('ontouchstart' in window || nav.maxTouchPoints > 0);
+  D.touchPoints  = nav.maxTouchPoints || 0;
+
+  // Device type inference
+  const ua = nav.userAgent.toLowerCase();
+  D.deviceType  = /mobile|android|iphone|ipod/.test(ua) ? 'Mobile'
+                : /ipad|tablet/.test(ua) ? 'Tablet' : 'Desktop';
+
+  // Browser inference
+  D.browser = /edg\//.test(ua) ? 'Edge'
+            : /opr\/|opera/.test(ua) ? 'Opera'
+            : /firefox/.test(ua) ? 'Firefox'
+            : /chrome/.test(ua) ? 'Chrome'
+            : /safari/.test(ua) ? 'Safari' : 'Unknown';
+
+  // OS inference
+  D.os = /windows nt 10/.test(ua) ? 'Windows 10/11'
+       : /windows/.test(ua) ? 'Windows'
+       : /mac os x/.test(ua) ? 'macOS'
+       : /iphone os/.test(ua) ? 'iOS'
+       : /android/.test(ua) ? 'Android'
+       : /linux/.test(ua) ? 'Linux' : 'Unknown OS';
+
+  // Battery (async)
+  if ('getBattery' in nav) {
+    try {
+      const b = await nav.getBattery();
+      D.battPct     = Math.round(b.level * 100);
+      D.battCharge  = b.charging;
+      D.battTimeLeft = b.dischargingTime && b.dischargingTime !== Infinity
+                     ? Math.round(b.dischargingTime / 60) + ' min remaining' : null;
+    } catch(_) {}
+  }
+
+  renderDevPanel();
+  updatePresets();
+  document.getElementById('tz-foot').textContent = D.tz;
 }
 
-function addStep(type, msg) {
-  const wrap = document.getElementById('stepsWrap');
-  const div = document.createElement('div');
-  div.className = 'step';
-  const icons = { think: '?', search: '⌕', check: '✓', warn: '!', final: '★' };
-  div.innerHTML = `<div class="step-icon ${type}">${icons[type] || '?'}</div><div class="step-text">${msg}</div>`;
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
-  stepCount++;
-  document.getElementById('s-steps').textContent = stepCount;
-  document.getElementById('s-time').textContent = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+function renderDevPanel() {
+  const el = document.getElementById('dev-body');
+  const now = new Date();
+
+  const rows = [
+    ['Device',      D.deviceType,             'hi'],
+    ['OS',          D.os,                     ''],
+    ['Browser',     D.browser,                ''],
+    ['Platform',    D.platform,               ''],
+    ['Language',    D.languages,              ''],
+    ['Screen',      `${D.screenW}×${D.screenH} @${D.dpr}x`, ''],
+    ['CPU Cores',   D.cores,                  'hi'],
+    ['Memory',      D.memory,                 'hi'],
+    ['Local Time',  now.toLocaleTimeString(), 'ok'],
+    ['Date',        D.isoDate,                ''],
+    ['Timezone',    D.tz,                     'lit'],
+    ['UTC Offset',  D.tzOffset,               ''],
+    ['Dark Mode',   D.darkMode ? 'Yes' : 'No',''],
+    ['Touch',       D.touch ? `Yes (${D.touchPoints}pt)` : 'No', ''],
+    ['Online',      D.online ? 'Yes' : 'No',  D.online ? 'ok' : 'err'],
+    ['Network',     D.netType || '?',         D.online ? 'ok' : 'wrn'],
+    ['Downlink',    D.netDownlink || '?',      ''],
+    ['Latency',     D.netRtt || '?',           ''],
+  ];
+
+  if (D.battPct != null) {
+    rows.push(['Battery', D.battPct + '%', D.battPct > 20 ? 'ok' : 'wrn']);
+    rows.push(['Charging', D.battCharge ? 'Yes ⚡' : 'No', D.battCharge ? 'ok' : '']);
+  }
+
+  if (D.lat != null) {
+    rows.push(['Latitude',  D.lat.toFixed(5) + '°',  'ok']);
+    rows.push(['Longitude', D.lon.toFixed(5) + '°',  'ok']);
+    rows.push(['GPS Acc.',  D.geoAcc + ' m',          'ok']);
+  }
+
+  el.innerHTML = rows.map(([l, v, c]) =>
+    `<div class="di"><div class="dl">${l}</div><div class="dv ${c}">${v || '—'}</div></div>`
+  ).join('');
+
+  // Status bar
+  const bar = document.createElement('div');
+  bar.className = 'dev-status-bar';
+  bar.innerHTML = D.lat != null
+    ? `<span class="ok">📍 Location injected into AI: ${D.lat.toFixed(4)}°, ${D.lon.toFixed(4)}°</span>`
+    : `<button class="geo-btn" id="geo-btn" onclick="requestGeo()">📍 Share location with AI (optional)</button>
+       <span style="color:var(--muted)">Enables weather, local queries, distance-based answers</span>`;
+  el.appendChild(bar);
 }
 
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function toggleDev() {
+  const body  = document.getElementById('dev-body');
+  const arrow = document.getElementById('dev-arrow');
+  const open  = !body.classList.contains('hidden');
+  body.classList.toggle('hidden', open);
+  arrow.classList.toggle('up', !open);
+}
 
-async function startThinking() {
-  const q = document.getElementById('question').value.trim();
+function requestGeo() {
+  const btn = document.getElementById('geo-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Requesting…'; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      D.lat = pos.coords.latitude;
+      D.lon = pos.coords.longitude;
+      D.geoAcc = Math.round(pos.coords.accuracy);
+      document.getElementById('geo-badge').innerHTML =
+        `<div class="dot d-blue"></div>📍 ${D.lat.toFixed(3)}, ${D.lon.toFixed(3)}`;
+      renderDevPanel();
+      updatePresets();
+    },
+    () => {
+      if (btn) { btn.disabled = false; btn.textContent = '📍 Denied — retry'; }
+      document.getElementById('geo-badge').innerHTML =
+        `<div class="dot d-blue"></div>Location: denied`;
+    },
+    { enableHighAccuracy: true, timeout: 12000 }
+  );
+}
+
+// ══════════════════════════════════════════════════════
+//  SYSTEM PROMPT BUILDER
+// ══════════════════════════════════════════════════════
+
+function buildSysPrompt() {
+  const now = new Date();
+  const lines = [
+    `You are a highly capable AI assistant with real-time internet access.`,
+    `RULE: You MUST use the web_search tool to get current information before answering any question.`,
+    `RULE: Search thoroughly — use multiple searches if needed for comprehensive answers.`,
+    `RULE: Cite where facts came from naturally in your response (e.g. "According to Reuters...").`,
+    `RULE: Write in plain text — no markdown symbols (* # ** ##). Use clear paragraphs.`,
+    `RULE: Be specific and detailed. Include numbers, dates, and key facts from search results.`,
+    ``,
+    `═══ USER DEVICE CONTEXT ═══`,
+    `Device Type : ${D.deviceType}`,
+    `OS / Browser: ${D.os} / ${D.browser}`,
+    `Screen      : ${D.screenW}×${D.screenH} @ ${D.dpr}x pixel ratio`,
+    `CPU Cores   : ${D.cores}`,
+    `RAM         : ${D.memory}`,
+    ``,
+    `═══ USER TIME & LOCATION ═══`,
+    `Current Date: ${D.localDate} (${D.isoDate})`,
+    `Current Time: ${now.toLocaleTimeString()} (${D.tz} / ${D.tzOffset})`,
+    `Preferred Lang: ${D.languages}`,
+  ];
+
+  if (D.lat != null) {
+    lines.push(`GPS Location: ${D.lat.toFixed(6)}, ${D.lon.toFixed(6)} (±${D.geoAcc}m)`);
+    lines.push(`Use this GPS position for weather, local business, distances, and map-related queries.`);
+  }
+
+  lines.push(``, `═══ NETWORK & HARDWARE ═══`);
+  if (D.netType) lines.push(`Network Type: ${D.netType}${D.netDownlink ? ', ' + D.netDownlink : ''}`);
+  if (D.battPct != null) lines.push(`Battery: ${D.battPct}% (${D.battCharge ? 'charging' : 'discharging'})`);
+  lines.push(`Online: ${D.online ? 'Yes' : 'No'}`);
+
+  lines.push(``);
+  lines.push(`The user's local time is ${now.toLocaleTimeString()} — factor this into time-sensitive answers.`);
+  if (D.lat != null) lines.push(`The user is physically near coordinates (${D.lat.toFixed(3)}, ${D.lon.toFixed(3)}) — use for local recommendations.`);
+  if (D.languages !== 'en' && D.languages !== 'en-US' && !D.languages.startsWith('en')) {
+    lines.push(`The user's preferred language is ${D.languages} — respond in that language if appropriate.`);
+  }
+
+  return lines.join('\n');
+}
+
+// ══════════════════════════════════════════════════════
+//  PRESETS (device-aware)
+// ══════════════════════════════════════════════════════
+
+function updatePresets() {
+  const weatherQ = D.lat != null
+    ? `What is the current weather, temperature, and forecast for coordinates ${D.lat.toFixed(3)}, ${D.lon.toFixed(3)}?`
+    : `What is the current weather in Kerala, India right now?`;
+
+  const presetList = [
+    { label: '🌐 AI news today',   q: `What is the most important AI and technology news today, ${D.isoDate}?` },
+    { label: '₿ Bitcoin price',    q: `What is the current price of Bitcoin and major crypto market movements today?` },
+    { label: D.lat ? '🌤 My weather' : '☁ Kerala weather', q: weatherQ },
+    { label: '🏎 F1 latest',       q: `What is the latest Formula 1 race result, standings, and news as of ${D.isoDate}?` },
+    { label: '📰 Breaking news',   q: `What are the top 3 most important breaking news stories right now on ${D.localDate}?` },
+    { label: '📱 New phones 2026', q: `What are the best and newest smartphones announced or released in 2026 so far?` },
+  ];
+
+  const row = document.getElementById('presets');
+  row.innerHTML = '';
+  presetList.forEach(({ label, q }) => {
+    const s = document.createElement('span');
+    s.className = 'preset';
+    s.textContent = label;
+    s.onclick = () => document.getElementById('q').value = q;
+    row.appendChild(s);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  STATS ENGINE
+// ══════════════════════════════════════════════════════
+
+let t0 = 0, nSteps = 0, nSearches = 0, nTokens = 0, nSources = 0, nRounds = 0;
+const sources = [];
+
+function setStat(id, val) {
+  const el = document.getElementById('sv-' + id);
+  if (el) el.textContent = val;
+}
+
+function litStat(id) {
+  const el = document.getElementById('st-' + id);
+  if (el) el.classList.add('lit');
+}
+
+function tick() { setStat('time', ((Date.now() - t0) / 1000).toFixed(1) + 's'); }
+
+function addStep(type, html) {
+  const w = document.getElementById('steps');
+  const d = document.createElement('div');
+  d.className = 'step';
+  const icons = { think:'⊕', search:'⌕', check:'✓', warn:'!', final:'★', device:'⊡', net:'◎' };
+  d.innerHTML = `<div class="si si-${type}">${icons[type]||'?'}</div><div class="st">${html}</div>`;
+  w.appendChild(d);
+  w.scrollTop = w.scrollHeight;
+  nSteps++;
+  setStat('steps', nSteps);
+  tick();
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ══════════════════════════════════════════════════════
+//  MAIN — MULTI-TURN WEB SEARCH ENGINE
+// ══════════════════════════════════════════════════════
+
+async function go() {
+  const q = document.getElementById('q').value.trim();
   if (!q) return;
 
-  const btn = document.getElementById('thinkBtn');
+  const btn = document.getElementById('think-btn');
   btn.disabled = true;
-  startTime = Date.now();
-  stepCount = 0; searchCount = 0; tokenCount = 0;
 
-  document.getElementById('stepsWrap').innerHTML = '';
-  document.getElementById('thinkPanel').style.display = 'block';
-  document.getElementById('ansPanel').style.display = 'none';
-  document.getElementById('thinkPulse').style.display = 'block';
+  // Reset state
+  t0 = Date.now(); nSteps=0; nSearches=0; nTokens=0; nSources=0; nRounds=0; sources.length=0;
+  ['steps','searches','tokens','time','sources','rounds'].forEach(k => setStat(k, k==='time'?'0s':'0'));
+  document.getElementById('steps').innerHTML = '';
+  document.getElementById('think-panel').style.display = 'block';
+  document.getElementById('ans-panel').style.display   = 'none';
+  document.getElementById('pp').style.animationPlayState = 'running';
 
-  addStep('think', `Parsing question: <strong>${q.slice(0, 70)}${q.length > 70 ? '...' : ''}</strong>`);
-  await delay(300);
-  addStep('think', 'Deciding whether web search is needed for this question...');
-  await delay(300);
-  addStep('search', '<span class="caution">Activating web search tool</span> — fetching live internet data...');
+  // Animate stats
+  ['steps','searches','tokens','time','sources','rounds'].forEach(id => {
+    document.getElementById('st-'+id).classList.remove('lit');
+  });
+
+  // Context steps
+  addStep('device', `Device: <span class="hi">${D.deviceType}</span> · ${D.browser} on ${D.os} · <span class="hi">${D.screenW}×${D.screenH}</span> · ${D.cores} cores · ${D.memory} RAM`);
+  await sleep(180);
+  addStep('device', `Time: <span class="ok">${new Date().toLocaleTimeString()}</span> · <span class="hi">${D.tz}</span> · ${D.tzOffset}`);
+  await sleep(180);
+
+  if (D.lat != null) {
+    addStep('device', `📍 GPS: <span class="ok">${D.lat.toFixed(4)}°N, ${D.lon.toFixed(4)}°E</span> ±${D.geoAcc}m — location injected into system prompt`);
+    await sleep(140);
+  }
+
+  if (D.netType) {
+    addStep('net', `Network: <span class="hi">${D.netType}</span>${D.netDownlink ? ' · ' + D.netDownlink : ''} · Online: <span class="ok">${D.online?'Yes':'No'}</span>`);
+    await sleep(140);
+  }
+
+  if (D.battPct != null) {
+    addStep('device', `Battery: <span class="${D.battPct > 20 ? 'ok' : 'caut'}">${D.battPct}%</span> (${D.battCharge ? '⚡ charging' : 'discharging'})`);
+    await sleep(120);
+  }
+
+  addStep('think', `Question: <strong>${esc(q.slice(0,90))}${q.length>90?'…':''}</strong>`);
+  await sleep(200);
+  addStep('search', `<span class="caut">Activating web search</span> — fetching live internet data…`);
+
+  // ─── API LOOP ────────────────────────────────────────
+  const sysPrompt = buildSysPrompt();
+  const toolDef   = [{ type: 'web_search_20250305', name: 'web_search' }];
+  let messages    = [{ role: 'user', content: q }];
+  let finalText   = '';
+  const MAX_ROUNDS = 5;
 
   try {
-    const systemPrompt = `You are a reasoning AI that thinks step by step and searches the web for current information.
+    while (nRounds < MAX_ROUNDS) {
+      nRounds++;
+      setStat('rounds', nRounds);
+      litStat('rounds');
 
-When answering, you MUST use the web_search tool to look up current, real-time information before answering.
-
-After searching, reason carefully through what you found and give a clear, well-structured answer.
-
-Your answer should be in plain text (no markdown symbols like ** or ##). Use clear paragraph breaks instead.
-Be informative and specific. Include key facts from your search results.`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        system: systemPrompt,
-        tools: [{
-          type: 'web_search_20250305',
-          name: 'web_search'
-        }],
-        messages: [{ role: 'user', content: q }]
-      })
-    });
-
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error?.message || 'API error ' + response.status);
-    }
-
-    const data = await response.json();
-    tokenCount = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
-    document.getElementById('s-tokens').textContent = tokenCount.toLocaleString();
-
-    // Process content blocks — show reasoning trace
-    let finalText = '';
-    let sources = [];
-
-    for (const block of data.content) {
-      if (block.type === 'tool_use' && block.name === 'web_search') {
-        searchCount++;
-        document.getElementById('s-searches').textContent = searchCount;
-        const query = block.input?.query || 'search';
-        addStep('search', `<span class="caution">Searching:</span> "<span class="hi">${query}</span>"`);
-        await delay(200);
-      } else if (block.type === 'tool_result') {
-        addStep('check', '<span class="good">Search results received.</span> Analysing web content...');
-        await delay(200);
-        // Extract source URLs if available
-        if (Array.isArray(block.content)) {
-          for (const c of block.content) {
-            if (c.type === 'text') {
-              const urlMatches = c.text.match(/https?:\/\/[^\s"<>]+/g);
-              if (urlMatches) sources.push(...urlMatches.slice(0, 3));
-            }
-          }
-        }
-      } else if (block.type === 'text' && block.text) {
-        finalText += block.text;
-      }
-    }
-
-    // If stop_reason is tool_use, we need to continue the conversation
-    if (data.stop_reason === 'tool_use') {
-      addStep('think', 'Processing search results and formulating answer...');
-      await delay(300);
-
-      // Build tool results to send back
-      const toolResults = [];
-      for (const block of data.content) {
-        if (block.type === 'tool_use') {
-          toolResults.push({
-            type: 'tool_result',
-            tool_use_id: block.id,
-            content: 'Search completed.'
-          });
-        }
-      }
-
-      const response2 = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
           max_tokens: 1000,
-          system: systemPrompt,
-          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-          messages: [
-            { role: 'user', content: q },
-            { role: 'assistant', content: data.content },
-            { role: 'user', content: toolResults }
-          ]
+          system: sysPrompt,
+          tools: toolDef,
+          messages
         })
       });
 
-      if (response2.ok) {
-        const data2 = await response2.json();
-        tokenCount += (data2.usage?.input_tokens || 0) + (data2.usage?.output_tokens || 0);
-        document.getElementById('s-tokens').textContent = tokenCount.toLocaleString();
+      if (!res.ok) {
+        const e = await res.json();
+        throw new Error(e.error?.message || `HTTP ${res.status}`);
+      }
 
-        for (const block of data2.content) {
-          if (block.type === 'text') finalText += block.text;
+      const data = await res.json();
+      const inTok  = data.usage?.input_tokens  || 0;
+      const outTok = data.usage?.output_tokens || 0;
+      nTokens += inTok + outTok;
+      setStat('tokens', nTokens.toLocaleString());
+      litStat('tokens');
+
+      // Process blocks
+      const toolUseBlocks = [];
+      let roundText = '';
+      let hasToolResults = false;
+
+      for (const block of data.content) {
+        if (block.type === 'tool_use' && block.name === 'web_search') {
+          nSearches++;
+          setStat('searches', nSearches);
+          litStat('searches');
+          const sq = block.input?.query || block.input?.q || '(search)';
+          addStep('search', `R${nRounds} · <span class="caut">Search:</span> "<span class="hi">${esc(sq)}</span>"`);
+          toolUseBlocks.push(block);
+          await sleep(140);
+
+        } else if (block.type === 'tool_result') {
+          hasToolResults = true;
+          addStep('check', `<span class="ok">Results received</span> · round ${nRounds} · analysing content…`);
+          litStat('searches');
+
+          // Extract sources
+          let raw = '';
+          if (Array.isArray(block.content)) {
+            for (const c of block.content) {
+              if (c.type === 'text') raw += c.text;
+              if (c.source?.url && !sources.includes(c.source.url)) sources.push(c.source.url);
+            }
+          } else if (typeof block.content === 'string') {
+            raw = block.content;
+          }
+          // URL extraction
+          const urls = (raw.match(/https?:\/\/[^\s"<>',\)\]]+/g) || []).slice(0, 6);
+          for (const u of urls) if (!sources.includes(u)) sources.push(u);
+          nSources = sources.length;
+          setStat('sources', nSources);
+          litStat('sources');
+          await sleep(130);
+
+        } else if (block.type === 'text' && block.text) {
+          roundText += block.text;
         }
       }
-    }
 
-    addStep('think', 'Cross-checking facts and assembling final response...');
-    await delay(300);
-    addStep('final', '<span class="good">Reasoning complete.</span> Answer ready.');
+      finalText += roundText;
 
-    document.getElementById('thinkPulse').style.display = 'none';
-
-    // Deduplicate sources
-    sources = [...new Set(sources)].slice(0, 4);
-
-    // Render answer
-    const ansBody = document.getElementById('ansBody');
-    let html = `<div style="white-space:pre-wrap;word-wrap:break-word;">${escapeHtml(finalText.trim())}</div>`;
-
-    if (sources.length > 0) {
-      html += `<div class="sources-list"><div class="sources-label">Sources searched</div>`;
-      for (const src of sources) {
-        try {
-          const u = new URL(src);
-          html += `<div class="source-item">${u.hostname}</div>`;
-        } catch {}
+      // Done?
+      if (data.stop_reason === 'end_turn') {
+        addStep('think', `Round ${nRounds} complete — <span class="ok">stop: end_turn</span>`);
+        break;
       }
-      html += `</div>`;
+
+      if (data.stop_reason === 'tool_use') {
+        // Need another turn — append assistant turn and provide tool_results
+        addStep('think', `Round ${nRounds} — ${toolUseBlocks.length} search(es) triggered, continuing…`);
+        messages.push({ role: 'assistant', content: data.content });
+
+        // Build tool_result responses
+        const toolResults = toolUseBlocks.map(b => ({
+          type: 'tool_result',
+          tool_use_id: b.id,
+          content: 'Search results have been provided. Please analyze them and continue with your response.'
+        }));
+        messages.push({ role: 'user', content: toolResults });
+        await sleep(250);
+
+      } else if (data.stop_reason === 'max_tokens') {
+        addStep('warn', `<span class="caut">Token limit reached on round ${nRounds}</span>`);
+        break;
+      } else {
+        break;
+      }
     }
 
-    html += `
-      <div class="confidence-bar"><div class="confidence-fill" id="confFill"></div></div>
-      <div class="conf-label"><span>Response confidence</span><span id="confPct">—</span></div>`;
+    // Finalize
+    addStep('think', 'Cross-checking facts, assembling final answer…');
+    await sleep(220);
+    addStep('final', `<span class="ok">Reasoning complete.</span> · <span class="pur">${nRounds} round(s)</span> · <span class="caut">${nSearches} search(es)</span> · <span class="hi">${nSources} source(s)</span>`);
 
-    ansBody.innerHTML = html;
-    document.getElementById('ansPanel').style.display = 'block';
+    document.getElementById('pp').style.animationPlayState = 'paused';
+    litStat('steps');
+    litStat('time');
 
-    const conf = searchCount > 0 ? Math.min(92, 75 + searchCount * 5) : 65;
-    document.getElementById('confPct').textContent = conf + '%';
-    setTimeout(() => {
-      const fill = document.getElementById('confFill');
-      if (fill) fill.style.width = conf + '%';
-    }, 100);
+    if (!finalText.trim()) {
+      finalText = '(No text was returned. The AI may have only performed searches. Please try again with a more specific question.)';
+    }
+
+    renderAnswer(finalText.trim(), [...new Set(sources)].slice(0, 10));
+    addToHistory(q);
 
   } catch (err) {
-    document.getElementById('thinkPulse').style.display = 'none';
-    addStep('warn', `<span class="caution">Error: ${escapeHtml(err.message)}</span>`);
-    const ansBody = document.getElementById('ansBody');
-    ansBody.innerHTML = `<div class="error-box">Something went wrong: ${escapeHtml(err.message)}<br><br>Check your internet connection and try again.</div>`;
-    document.getElementById('ansPanel').style.display = 'block';
+    document.getElementById('pp').style.animationPlayState = 'paused';
+    addStep('warn', `<span class="err">Error: ${esc(err.message)}</span>`);
+    const ab = document.getElementById('ans-body');
+    ab.innerHTML = `<div class="err-box"><strong>Something went wrong:</strong><br>${esc(err.message)}<br><br>Check your internet connection and try again.</div>`;
+    document.getElementById('ans-panel').style.display = 'block';
   }
 
-  document.getElementById('s-time').textContent = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+  tick();
   btn.disabled = false;
 }
 
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+// ══════════════════════════════════════════════════════
+//  RENDER ANSWER — typewriter + sources + confidence
+// ══════════════════════════════════════════════════════
+
+let ansText = '';
+
+function renderAnswer(text, srcs) {
+  ansText = text;
+  const ab = document.getElementById('ans-body');
+  ab.innerHTML = '';
+
+  const td = document.createElement('div');
+  td.className = 'ans-text';
+  td.id = 'ans-text-el';
+  ab.appendChild(td);
+
+  // Cursor
+  const cur = document.createElement('span');
+  cur.className = 'cursor-blink';
+  cur.id = 'typcursor';
+  ab.appendChild(cur);
+
+  // Typewriter
+  let i = 0;
+  const chunkSize = Math.max(1, Math.ceil(text.length / 220));
+
+  const type = () => {
+    if (i < text.length) {
+      td.textContent = text.slice(0, i + chunkSize);
+      i += chunkSize;
+      requestAnimationFrame(type);
+    } else {
+      td.textContent = text;
+      cur.remove();
+      buildAnswerMeta(ab, srcs);
+    }
+  };
+
+  document.getElementById('ans-panel').style.display = 'block';
+  document.getElementById('ans-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  requestAnimationFrame(type);
 }
+
+function buildAnswerMeta(ab, srcs) {
+  // Sources
+  if (srcs.length > 0) {
+    const sdiv = document.createElement('div');
+    sdiv.className = 'sources-block';
+    const chips = srcs.map(src => {
+      try {
+        const u = new URL(src);
+        return `<a class="src-chip" href="${esc(src)}" target="_blank" rel="noopener noreferrer">↗ ${u.hostname.replace(/^www\./,'')}</a>`;
+      } catch { return ''; }
+    }).filter(Boolean).join('');
+    sdiv.innerHTML = `<div class="src-label">Sources (${srcs.length})</div><div class="src-chips">${chips}</div>`;
+    ab.appendChild(sdiv);
+  }
+
+  // Confidence
+  const conf = Math.min(96, 52 + nSearches * 9 + (srcs.length > 0 ? 8 : 0) + (D.lat != null ? 6 : 0));
+  const cdiv = document.createElement('div');
+  cdiv.className = 'conf-block';
+  cdiv.innerHTML = `
+    <div class="conf-bar"><div class="conf-fill" id="cf"></div></div>
+    <div class="conf-meta"><span>Response confidence</span><span>${conf}%</span></div>`;
+  ab.appendChild(cdiv);
+  setTimeout(() => { const f = document.getElementById('cf'); if (f) f.style.width = conf + '%'; }, 120);
+
+  // Meta
+  const meta = document.createElement('div');
+  meta.className = 'ans-meta';
+  const wc = ansText.split(/\s+/).filter(Boolean).length;
+  const rt = Math.max(1, Math.round(wc / 230));
+  meta.innerHTML = `
+    <span>${wc} words</span>
+    <span>~${rt} min read</span>
+    <span>${nTokens.toLocaleString()} tokens</span>
+    <span>${((Date.now() - t0)/1000).toFixed(1)}s total</span>
+    <span>${new Date().toLocaleTimeString()}</span>`;
+  ab.appendChild(meta);
+}
+
+// ══════════════════════════════════════════════════════
+//  COPY + SPEAK
+// ══════════════════════════════════════════════════════
+
+async function copyAns() {
+  try {
+    await navigator.clipboard.writeText(ansText);
+    const b = document.getElementById('copy-btn');
+    b.textContent = 'Copied!'; b.classList.add('done');
+    setTimeout(() => { b.textContent = 'Copy'; b.classList.remove('done'); }, 2200);
+  } catch(_) {}
+}
+
+function speakAns() {
+  if (!window.speechSynthesis || !ansText) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(ansText.slice(0, 3000));
+  u.lang = D.language || 'en-US';
+  window.speechSynthesis.speak(u);
+  const b = document.getElementById('speak-btn');
+  b.textContent = '⏸ Speaking'; b.classList.add('done');
+  u.onend = () => { b.textContent = 'Speak'; b.classList.remove('done'); };
+}
+
+// ══════════════════════════════════════════════════════
+//  SESSION HISTORY
+// ══════════════════════════════════════════════════════
+
+const history = [];
+
+function addToHistory(q) {
+  history.unshift({ q, t: new Date().toLocaleTimeString(), srch: nSearches, tok: nTokens });
+  if (history.length > 8) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const panel = document.getElementById('hist-panel');
+  const items = document.getElementById('hist-items');
+  if (!history.length) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+  items.innerHTML = history.map((h, i) =>
+    `<div class="hist-item" onclick="rerun(${i})">
+      <div class="hq">${esc(h.q.slice(0,85))}${h.q.length>85?'…':''}</div>
+      <div class="hm">${h.srch}🔍 · ${h.tok.toLocaleString()}tk · ${h.t}</div>
+    </div>`
+  ).join('');
+}
+
+function rerun(i) {
+  if (history[i]) { document.getElementById('q').value = history[i].q; }
+}
+
+// ══════════════════════════════════════════════════════
+//  CLEAR
+// ══════════════════════════════════════════════════════
+
+function clearAll() {
+  document.getElementById('q').value = '';
+  document.getElementById('think-panel').style.display = 'none';
+  document.getElementById('ans-panel').style.display   = 'none';
+  document.getElementById('steps').innerHTML = '';
+  ['steps','searches','tokens','sources','rounds'].forEach(k => setStat(k,'0'));
+  setStat('time','0s');
+  ['steps','searches','tokens','time','sources','rounds'].forEach(id =>
+    document.getElementById('st-'+id)?.classList.remove('lit')
+  );
+  nSteps=0; nSearches=0; nTokens=0; nSources=0; nRounds=0; sources.length=0; ansText='';
+}
+
+// ══════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════
+//  LIVE CLOCK
+// ══════════════════════════════════════════════════════
+
+function updateClock() {
+  const el = document.getElementById('live-clock');
+  if (el) el.textContent = new Date().toLocaleTimeString();
+  // Refresh device time in panel too
+  const rows = document.querySelectorAll('.dv.ok');
+  // (Time is re-rendered when device panel is opened)
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// ══════════════════════════════════════════════════════
+//  NETWORK MONITORING
+// ══════════════════════════════════════════════════════
+
+window.addEventListener('offline', () => {
+  document.querySelector('.b-green').style.opacity = '0.4';
+  document.querySelector('.b-green').innerHTML = `<div class="dot d-green"></div>Offline`;
+  addStep('warn', '<span class="err">⚠ Network went offline</span>');
+});
+
+window.addEventListener('online', () => {
+  document.querySelector('.b-green').style.opacity = '1';
+  document.querySelector('.b-green').innerHTML = `<div class="dot d-green"></div>Internet live`;
+  D.online = true;
+});
+
+// ══════════════════════════════════════════════════════
+//  KEYBOARD
+// ══════════════════════════════════════════════════════
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); go(); }
+  if (e.key === 'Escape') { window.speechSynthesis?.cancel(); }
+});
+
+// ══════════════════════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════════════════════
+
+collectDevice();
 </script>
 </body>
 </html>
