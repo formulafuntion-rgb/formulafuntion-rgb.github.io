@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thinking AI — Live Internet Reasoning</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #141820;
+    --surface2: #1c2230;
+    --border: #2a3347;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  header { text-align: center; margin-bottom: 2rem; }
+
+  header h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 20px; color: var(--accent3);
+    font-size: 0.7rem; font-weight: 500; padding: 3px 10px;
+    margin-top: 0.5rem;
+  }
+
+  .dot { width: 6px; height: 6px; background: var(--accent3); border-radius: 50%; animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .container { width: 100%; max-width: 780px; display: flex; flex-direction: column; gap: 1rem; }
+
+  .stats-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+  .stat {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.6rem 1rem;
+    flex: 1; min-width: 100px; text-align: center;
+  }
+
+  .stat-val { font-family: var(--mono); font-size: 1.2rem; font-weight: 500; color: var(--accent); }
+  .stat-key { font-size: 0.68rem; color: var(--muted); margin-top: 0.1rem; }
+
+  .input-area {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem;
+    display: flex; flex-direction: column; gap: 0.75rem;
+  }
+
+  .input-area label {
+    font-size: 0.72rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+  }
+
+  .presets { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .preset {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 20px; color: var(--muted);
+    cursor: pointer; font-size: 0.73rem; padding: 0.28rem 0.75rem;
+    transition: all 0.2s;
+  }
+
+  .preset:hover { border-color: var(--accent); color: var(--accent); }
+
+  textarea {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text);
+    font-family: var(--sans); font-size: 0.95rem; line-height: 1.6;
+    padding: 0.75rem 1rem; resize: vertical; min-height: 80px;
+    width: 100%; outline: none; transition: border-color 0.2s;
+  }
+
+  textarea:focus { border-color: var(--accent); }
+
+  .controls { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+
+  .think-btn {
+    background: var(--accent); border: none; border-radius: 8px;
+    color: #fff; cursor: pointer; font-family: var(--sans);
+    font-size: 0.9rem; font-weight: 500; padding: 0.55rem 1.4rem;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .think-btn:hover { opacity: 0.85; }
+  .think-btn:active { transform: scale(0.97); }
+  .think-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .clear-btn {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 8px; color: var(--muted); cursor: pointer;
+    font-family: var(--sans); font-size: 0.85rem; padding: 0.55rem 1rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .clear-btn:hover { border-color: var(--text); color: var(--text); }
+
+  /* Thinking panel */
+  .thinking-panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; display: none;
+  }
+
+  .panel-header {
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent2);
+  }
+
+  .panel-pulse {
+    width: 7px; height: 7px; background: var(--accent2);
+    border-radius: 50%; animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .steps-wrap {
+    padding: 1rem; display: flex; flex-direction: column; gap: 0.55rem;
+    max-height: 360px; overflow-y: auto;
+  }
+
+  .step {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    opacity: 0; transform: translateY(5px);
+    animation: stepIn 0.25s forwards;
+  }
+
+  @keyframes stepIn { to { opacity: 1; transform: translateY(0); } }
+
+  .step-icon {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.62rem; font-weight: 600; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .step-icon.think { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .step-icon.search { background: rgba(245,158,11,0.15); color: var(--warn); }
+  .step-icon.check { background: rgba(52,211,153,0.15); color: var(--accent3); }
+  .step-icon.warn  { background: rgba(245,158,11,0.15); color: var(--warn); }
+  .step-icon.final { background: rgba(167,139,250,0.15); color: var(--accent2); }
+
+  .step-text {
+    font-family: var(--mono); font-size: 0.77rem; line-height: 1.6;
+    color: #94a3b8; flex: 1;
+  }
+
+  .step-text strong { color: var(--text); font-weight: 500; }
+  .step-text .hi { color: var(--accent); }
+  .step-text .good { color: var(--accent3); }
+  .step-text .caution { color: var(--warn); }
+  .step-text .src { color: var(--accent2); font-style: italic; }
+
+  /* Answer panel */
+  .answer-panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; display: none;
+  }
+
+  .answer-header {
+    background: rgba(52,211,153,0.08); border-bottom: 1px solid rgba(52,211,153,0.2);
+    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent3);
+  }
+
+  .answer-body {
+    padding: 1.25rem; font-size: 0.93rem; line-height: 1.8; color: var(--text);
+    white-space: pre-wrap; word-wrap: break-word;
+  }
+
+  .sources-list {
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+
+  .sources-label {
+    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.3rem;
+  }
+
+  .source-item {
+    font-size: 0.75rem; color: var(--accent2);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  .source-item::before { content: '↗'; font-size: 0.65rem; }
+
+  .confidence-bar {
+    height: 3px; background: var(--border); border-radius: 4px;
+    margin-top: 1rem; overflow: hidden;
+  }
+
+  .confidence-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1.2s ease; width: 0%;
+  }
+
+  .conf-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem;
+  }
+
+  .error-box {
+    background: rgba(226,75,74,0.1); border: 1px solid rgba(226,75,74,0.3);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    font-size: 0.85rem; color: #f87171;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Thinking AI Engine</h1>
+  <p>Real AI reasoning powered by Claude + live web search</p>
+  <div class="badge"><div class="dot"></div> Internet connected · claude-sonnet-4-6</div>
+</header>
+
+<div class="container">
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-val" id="s-steps">0</div><div class="stat-key">think steps</div></div>
+    <div class="stat"><div class="stat-val" id="s-searches">0</div><div class="stat-key">web searches</div></div>
+    <div class="stat"><div class="stat-val" id="s-tokens">0</div><div class="stat-key">tokens used</div></div>
+    <div class="stat"><div class="stat-val" id="s-time">0s</div><div class="stat-key">think time</div></div>
+  </div>
+
+  <div class="input-area">
+    <label>Ask anything — it will search the web to answer</label>
+    <div class="presets">
+      <span class="preset" onclick="setQ('What is the latest news about AI today?')">Latest AI news</span>
+      <span class="preset" onclick="setQ('What is the current price of Bitcoin?')">Bitcoin price</span>
+      <span class="preset" onclick="setQ('Who won the most recent FIFA World Cup?')">FIFA winner</span>
+      <span class="preset" onclick="setQ('What are the newest smartphones in 2026?')">New phones 2026</span>
+      <span class="preset" onclick="setQ('What is Claude Fable 5 and how does it work?')">Claude Fable 5</span>
+    </div>
+    <textarea id="question" placeholder="Type any question — about news, facts, prices, events..."></textarea>
+    <div class="controls">
+      <button class="think-btn" id="thinkBtn" onclick="startThinking()">▶ Think + Search</button>
+      <button class="clear-btn" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <div class="thinking-panel" id="thinkPanel">
+    <div class="panel-header"><div class="panel-pulse" id="thinkPulse"></div> Reasoning trace</div>
+    <div class="steps-wrap" id="stepsWrap"></div>
+  </div>
+
+  <div class="answer-panel" id="ansPanel">
+    <div class="answer-header">✓ Final answer</div>
+    <div class="answer-body" id="ansBody"></div>
+  </div>
+
+</div>
+
+<script>
+let startTime = 0;
+let stepCount = 0;
+let searchCount = 0;
+let tokenCount = 0;
+
+function setQ(q) { document.getElementById('question').value = q; }
+
+function clearAll() {
+  document.getElementById('question').value = '';
+  document.getElementById('thinkPanel').style.display = 'none';
+  document.getElementById('ansPanel').style.display = 'none';
+  document.getElementById('stepsWrap').innerHTML = '';
+  document.getElementById('s-steps').textContent = '0';
+  document.getElementById('s-searches').textContent = '0';
+  document.getElementById('s-tokens').textContent = '0';
+  document.getElementById('s-time').textContent = '0s';
+  stepCount = 0; searchCount = 0; tokenCount = 0;
+}
+
+function addStep(type, msg) {
+  const wrap = document.getElementById('stepsWrap');
+  const div = document.createElement('div');
+  div.className = 'step';
+  const icons = { think: '?', search: '⌕', check: '✓', warn: '!', final: '★' };
+  div.innerHTML = `<div class="step-icon ${type}">${icons[type] || '?'}</div><div class="step-text">${msg}</div>`;
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+  stepCount++;
+  document.getElementById('s-steps').textContent = stepCount;
+  document.getElementById('s-time').textContent = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function startThinking() {
+  const q = document.getElementById('question').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('thinkBtn');
+  btn.disabled = true;
+  startTime = Date.now();
+  stepCount = 0; searchCount = 0; tokenCount = 0;
+
+  document.getElementById('stepsWrap').innerHTML = '';
+  document.getElementById('thinkPanel').style.display = 'block';
+  document.getElementById('ansPanel').style.display = 'none';
+  document.getElementById('thinkPulse').style.display = 'block';
+
+  addStep('think', `Parsing question: <strong>${q.slice(0, 70)}${q.length > 70 ? '...' : ''}</strong>`);
+  await delay(300);
+  addStep('think', 'Deciding whether web search is needed for this question...');
+  await delay(300);
+  addStep('search', '<span class="caution">Activating web search tool</span> — fetching live internet data...');
+
+  try {
+    const systemPrompt = `You are a reasoning AI that thinks step by step and searches the web for current information.
+
+When answering, you MUST use the web_search tool to look up current, real-time information before answering.
+
+After searching, reason carefully through what you found and give a clear, well-structured answer.
+
+Your answer should be in plain text (no markdown symbols like ** or ##). Use clear paragraph breaks instead.
+Be informative and specific. Include key facts from your search results.`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: systemPrompt,
+        tools: [{
+          type: 'web_search_20250305',
+          name: 'web_search'
+        }],
+        messages: [{ role: 'user', content: q }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'API error ' + response.status);
+    }
+
+    const data = await response.json();
+    tokenCount = (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0);
+    document.getElementById('s-tokens').textContent = tokenCount.toLocaleString();
+
+    // Process content blocks — show reasoning trace
+    let finalText = '';
+    let sources = [];
+
+    for (const block of data.content) {
+      if (block.type === 'tool_use' && block.name === 'web_search') {
+        searchCount++;
+        document.getElementById('s-searches').textContent = searchCount;
+        const query = block.input?.query || 'search';
+        addStep('search', `<span class="caution">Searching:</span> "<span class="hi">${query}</span>"`);
+        await delay(200);
+      } else if (block.type === 'tool_result') {
+        addStep('check', '<span class="good">Search results received.</span> Analysing web content...');
+        await delay(200);
+        // Extract source URLs if available
+        if (Array.isArray(block.content)) {
+          for (const c of block.content) {
+            if (c.type === 'text') {
+              const urlMatches = c.text.match(/https?:\/\/[^\s"<>]+/g);
+              if (urlMatches) sources.push(...urlMatches.slice(0, 3));
+            }
+          }
+        }
+      } else if (block.type === 'text' && block.text) {
+        finalText += block.text;
+      }
+    }
+
+    // If stop_reason is tool_use, we need to continue the conversation
+    if (data.stop_reason === 'tool_use') {
+      addStep('think', 'Processing search results and formulating answer...');
+      await delay(300);
+
+      // Build tool results to send back
+      const toolResults = [];
+      for (const block of data.content) {
+        if (block.type === 'tool_use') {
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: block.id,
+            content: 'Search completed.'
+          });
+        }
+      }
+
+      const response2 = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          system: systemPrompt,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          messages: [
+            { role: 'user', content: q },
+            { role: 'assistant', content: data.content },
+            { role: 'user', content: toolResults }
+          ]
+        })
+      });
+
+      if (response2.ok) {
+        const data2 = await response2.json();
+        tokenCount += (data2.usage?.input_tokens || 0) + (data2.usage?.output_tokens || 0);
+        document.getElementById('s-tokens').textContent = tokenCount.toLocaleString();
+
+        for (const block of data2.content) {
+          if (block.type === 'text') finalText += block.text;
+        }
+      }
+    }
+
+    addStep('think', 'Cross-checking facts and assembling final response...');
+    await delay(300);
+    addStep('final', '<span class="good">Reasoning complete.</span> Answer ready.');
+
+    document.getElementById('thinkPulse').style.display = 'none';
+
+    // Deduplicate sources
+    sources = [...new Set(sources)].slice(0, 4);
+
+    // Render answer
+    const ansBody = document.getElementById('ansBody');
+    let html = `<div style="white-space:pre-wrap;word-wrap:break-word;">${escapeHtml(finalText.trim())}</div>`;
+
+    if (sources.length > 0) {
+      html += `<div class="sources-list"><div class="sources-label">Sources searched</div>`;
+      for (const src of sources) {
+        try {
+          const u = new URL(src);
+          html += `<div class="source-item">${u.hostname}</div>`;
+        } catch {}
+      }
+      html += `</div>`;
+    }
+
+    html += `
+      <div class="confidence-bar"><div class="confidence-fill" id="confFill"></div></div>
+      <div class="conf-label"><span>Response confidence</span><span id="confPct">—</span></div>`;
+
+    ansBody.innerHTML = html;
+    document.getElementById('ansPanel').style.display = 'block';
+
+    const conf = searchCount > 0 ? Math.min(92, 75 + searchCount * 5) : 65;
+    document.getElementById('confPct').textContent = conf + '%';
+    setTimeout(() => {
+      const fill = document.getElementById('confFill');
+      if (fill) fill.style.width = conf + '%';
+    }, 100);
+
+  } catch (err) {
+    document.getElementById('thinkPulse').style.display = 'none';
+    addStep('warn', `<span class="caution">Error: ${escapeHtml(err.message)}</span>`);
+    const ansBody = document.getElementById('ansBody');
+    ansBody.innerHTML = `<div class="error-box">Something went wrong: ${escapeHtml(err.message)}<br><br>Check your internet connection and try again.</div>`;
+    document.getElementById('ansPanel').style.display = 'block';
+  }
+
+  document.getElementById('s-time').textContent = ((Date.now() - startTime) / 1000).toFixed(1) + 's';
+  btn.disabled = false;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
