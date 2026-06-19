@@ -113,7 +113,7 @@ h1 {
 .dev-arrow.up { transform: rotate(180deg); }
 
 .dev-body {
-  display: none; padding: 0.85rem 1rem;
+  padding: 0.85rem 1rem;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr));
   gap: 0.45rem;
 }
@@ -151,6 +151,18 @@ h1 {
 
 .input-label { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
 
+.input-label-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+
+.model-select {
+  background: var(--s2); border: 1px solid var(--border);
+  border-radius: 7px; color: var(--text2); cursor: pointer;
+  font-family: var(--sans); font-size: 0.68rem; font-weight: 500;
+  padding: 0.25rem 0.5rem; outline: none; transition: border-color .2s, color .2s;
+  max-width: 100%;
+}
+.model-select:hover, .model-select:focus { border-color: var(--blue); color: var(--blue); }
+.model-select option { background: var(--s1); color: var(--text); }
+
 .presets { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 
 .preset {
@@ -181,6 +193,11 @@ textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,24
 .think-btn:hover { opacity: .9; box-shadow: 0 6px 24px rgba(59,130,246,.38); }
 .think-btn:active { transform: scale(.97); }
 .think-btn:disabled { opacity: .3; cursor: not-allowed; box-shadow: none; }
+.think-btn.stop {
+  background: linear-gradient(130deg, var(--red), var(--amber));
+  box-shadow: 0 4px 18px rgba(239,68,68,.22);
+}
+.think-btn.stop:hover { box-shadow: 0 6px 24px rgba(239,68,68,.38); }
 
 .hint-text { font-size: 0.64rem; color: var(--muted); }
 
@@ -282,39 +299,12 @@ textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,24
   animation: blink .7s step-end infinite;
 }
 
-.sources-block {
-  margin-top: 1.1rem; padding-top: 0.85rem; border-top: 1px solid var(--border);
+.ans-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem;
+  margin-top: 0.9rem; padding-top: 0.7rem; border-top: 1px solid var(--border);
+  font-family: var(--mono); font-size: 0.66rem; color: var(--muted);
 }
-
-.src-label {
-  font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .1em; color: var(--muted); margin-bottom: 0.45rem;
-}
-
-.src-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-
-.src-chip {
-  display: inline-flex; align-items: center; gap: 0.3rem;
-  background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.2);
-  border-radius: 4px; padding: 0.18rem 0.5rem;
-  font-size: 0.68rem; color: var(--purple); text-decoration: none;
-  transition: background .18s;
-}
-.src-chip:hover { background: rgba(139,92,246,.18); }
-
-.conf-block { margin-top: 0.85rem; }
-
-.conf-bar { height: 2px; background: var(--border); border-radius: 4px; overflow: hidden; }
-.conf-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--blue), var(--green)); transition: width 1.3s cubic-bezier(.19,1,.22,1); width: 0%; }
-.conf-meta { display: flex; justify-content: space-between; font-size: 0.64rem; color: var(--muted); margin-top: 0.3rem; }
-
-.ans-meta { display: flex; gap: 1rem; font-size: 0.64rem; color: var(--muted); margin-top: 0.6rem; flex-wrap: wrap; }
-
-.err-box {
-  background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.25);
-  border-radius: 8px; padding: 0.85rem 1rem;
-  font-size: 0.82rem; color: #f87171;
-}
+.ans-meta span:not(:last-child)::after { content: '·'; margin-left: 0.45rem; color: var(--border2); }
 
 /* ── HISTORY ─────────────────────────────── */
 .hist-panel {
@@ -343,18 +333,75 @@ textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,24
 /* ── FOOTER ──────────────────────────────── */
 footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(--muted); }
 
-/* ── SCROLLBAR ───────────────────────────── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+/* ── API KEY CARD ────────────────────────── */
+.key-card {
+  background: var(--s1); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color .3s;
+}
+.key-card.ok  { border-color: rgba(16,185,129,.4); }
+.key-card.bad { border-color: rgba(239,68,68,.4); }
+
+.key-head {
+  padding: 0.65rem 1rem; background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; transition: background .15s;
+}
+.key-head:hover { background: var(--s3); }
+
+.key-title {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--text2);
+}
+
+.key-status { font-size: 0.68rem; font-weight: 600; }
+.key-status.ok  { color: var(--green); }
+.key-status.bad { color: var(--amber); }
+
+.key-body {
+  padding: 0.75rem 1rem; display: flex; gap: 0.5rem;
+  align-items: center; flex-wrap: wrap;
+}
+.key-body.hidden { display: none; }
+
+.key-input {
+  flex: 1; min-width: 220px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 7px; color: var(--text); font-family: var(--mono);
+  font-size: 0.78rem; padding: 0.45rem 0.8rem; outline: none;
+  transition: border-color .2s;
+}
+.key-input:focus { border-color: var(--blue); }
+.key-input::placeholder { color: var(--muted); }
+
+.key-btn {
+  background: var(--s2); border: 1px solid var(--border);
+  border-radius: 7px; color: var(--text2); cursor: pointer;
+  font-family: var(--sans); font-size: 0.75rem;
+  padding: 0.45rem 0.85rem; white-space: nowrap; transition: all .18s;
+}
+.key-btn:hover { border-color: var(--blue); color: var(--blue); }
+.key-btn.save-btn { border-color: rgba(16,185,129,.4); color: var(--green); }
+.key-btn.save-btn:hover { background: rgba(16,185,129,.1); }
+
+.key-hint { font-size: 0.62rem; color: var(--muted); flex-basis: 100%; margin-top: 0.1rem; }
+.key-hint a { color: var(--blue); text-decoration: none; }
+.key-hint a:hover { text-decoration: underline; }
+
+.err-box {
+  background: rgba(239,68,68,.07); border: 1px solid rgba(239,68,68,.25);
+  border-radius: 8px; padding: 0.85rem 1rem;
+  font-size: 0.82rem; color: #f87171;
+}
 </style>
 </head>
 <body>
 
 <header>
   <h1>⚡ Thinking AI Engine</h1>
-  <p class="sub">Claude claude-sonnet-4-6 · Live Web Search · Device-Aware Context</p>
+  <p class="sub" id="sub-text">google/gemini-3.5-flash · OpenRouter API · Device-Aware Context</p>
   <div class="badges">
     <div class="badge b-green"><div class="dot d-green"></div>Internet live</div>
     <div class="badge b-blue" id="geo-badge"><div class="dot d-blue"></div>Location: pending</div>
@@ -364,7 +411,25 @@ footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(
 
 <div class="wrap">
 
-  <!-- Stats -->
+  <div class="key-card" id="key-card">
+    <div class="key-head" onclick="toggleKeyPanel()">
+      <div class="key-title">🔑 OpenRouter API Key</div>
+      <span class="key-status bad" id="key-status">⚠ Not set — required</span>
+    </div>
+    <div class="key-body" id="key-body">
+      <input type="password" id="api-key-input" class="key-input"
+        placeholder="sk-or-v1-…" autocomplete="off"
+        oninput="onKeyInput()" onkeydown="if(event.key==='Enter')saveKey()" />
+      <button class="key-btn save-btn" onclick="saveKey()">✓ Save</button>
+      <button class="key-btn" id="key-reveal-btn" onclick="toggleKeyVis()">Show</button>
+      <button class="key-btn" onclick="clearKey()" style="color:var(--red);border-color:rgba(239,68,68,.3)">Clear</button>
+      <span class="key-hint">
+        Get your key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>.
+        Stored locally in your browser — sent directly to OpenRouter API. No credits yet? Pick "Free (no credits needed)" in the model menu below.
+      </span>
+    </div>
+  </div>
+
   <div class="stats-grid">
     <div class="stat" id="st-steps"><div class="sv" id="sv-steps">0</div><div class="sk">Think Steps</div></div>
     <div class="stat" id="st-searches"><div class="sv" id="sv-searches">0</div><div class="sk">Searches</div></div>
@@ -374,7 +439,6 @@ footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(
     <div class="stat" id="st-rounds"><div class="sv" id="sv-rounds">0</div><div class="sk">API Rounds</div></div>
   </div>
 
-  <!-- Device Panel -->
   <div class="dev-card">
     <div class="dev-head" onclick="toggleDev()">
       <div class="dev-title">🖥 Device Context — injected into AI system prompt</div>
@@ -383,25 +447,31 @@ footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(
     <div class="dev-body hidden" id="dev-body"></div>
   </div>
 
-  <!-- Input -->
   <div class="input-box">
-    <div class="input-label">Ask anything — AI searches the web with your device context</div>
+    <div class="input-label-row">
+      <div class="input-label">Ask anything — device context is attached</div>
+      <select class="model-select" id="model-select" onchange="onModelChange()" aria-label="AI model">
+        <option value="google/gemini-3.5-flash">Gemini 3.5 Flash</option>
+        <option value="google/gemini-3.1-flash-lite">Gemini 3.1 Flash Lite — cheaper</option>
+        <option value="openai/gpt-5-mini">GPT-5 Mini</option>
+        <option value="anthropic/claude-haiku-4.5">Claude Haiku 4.5</option>
+        <option value="openrouter/free">Free (no credits needed)</option>
+      </select>
+    </div>
     <div class="presets" id="presets"></div>
     <textarea id="q" placeholder="Ask about news, prices, local weather, events, science, sports…"></textarea>
     <div class="controls">
-      <button class="think-btn" id="think-btn" onclick="go()">▶ Think + Search</button>
+      <button class="think-btn" id="think-btn" onclick="handleThinkClick()">▶ Think</button>
       <button class="clear-btn" onclick="clearAll()">Clear</button>
       <span class="hint-text">Ctrl+Enter</span>
     </div>
   </div>
 
-  <!-- Thinking -->
   <div class="think-panel" id="think-panel">
     <div class="panel-head"><div class="pp" id="pp"></div>Reasoning Trace</div>
     <div class="steps" id="steps"></div>
   </div>
 
-  <!-- Answer -->
   <div class="ans-panel" id="ans-panel">
     <div class="ans-head">
       <div class="ans-head-title">✓ Final Answer</div>
@@ -413,7 +483,6 @@ footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(
     <div class="ans-body" id="ans-body"></div>
   </div>
 
-  <!-- History -->
   <div class="hist-panel" id="hist-panel">
     <div class="hist-head">📋 Session History</div>
     <div id="hist-items"></div>
@@ -421,19 +490,137 @@ footer { margin-top: 2.5rem; text-align: center; font-size: 0.64rem; color: var(
 
 </div>
 
-<footer>Thinking AI · claude-sonnet-4-6 · Web Search Enabled · Device-Aware · <span id="tz-foot"></span></footer>
+<footer>Thinking AI · <span id="footer-model">google/gemini-3.5-flash</span> · Device-Aware · <span id="tz-foot"></span></footer>
 
 <script>
+// ══════════════════════════════════════════════════════
+//  API KEY MANAGEMENT & DEFAULT CONFIGURATION
+// ══════════════════════════════════════════════════════
+
+// Safe localStorage wrappers — some browsers/profiles (privacy modes, locked-down
+// corporate setups, certain file:// configurations) throw on localStorage access.
+// Without these guards, that throw happens at top-level script execution and the
+// ENTIRE page silently stops working (no buttons would even be wired up).
+function lsGet(key) { try { return localStorage.getItem(key); } catch (_) { return null; } }
+function lsSet(key, val) { try { localStorage.setItem(key, val); return true; } catch (_) { return false; } }
+function lsRemove(key) { try { localStorage.removeItem(key); } catch (_) {} }
+
+// 👇 PASTE YOUR OPENROUTER API KEY IN THE QUOTES BELOW TO MAKE IT THE DEFAULT KEY
+const DEFAULT_API_KEY = 'YOUR_OPENROUTER_KEY_HERE'; 
+
+let API_KEY = lsGet('thinking_ai_key') || (DEFAULT_API_KEY !== 'YOUR_OPENROUTER_KEY_HERE' ? DEFAULT_API_KEY : '');
+
+function initKeyUI() {
+  if (API_KEY) {
+    document.getElementById('api-key-input').value = API_KEY;
+    setKeyStatus(true);
+    document.getElementById('key-body').classList.add('hidden');
+  }
+}
+
+function onKeyInput() {
+  const val = document.getElementById('api-key-input').value.trim();
+  setKeyStatus(val.length > 15);
+}
+
+function saveKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (val.length < 10) {
+    document.getElementById('key-status').textContent = '✗ Invalid key format';
+    document.getElementById('key-status').className = 'key-status bad';
+    document.getElementById('key-card').className = 'key-card bad';
+    return;
+  }
+  API_KEY = val;
+  lsSet('thinking_ai_key', val);
+  setKeyStatus(true);
+  document.getElementById('key-body').classList.add('hidden');
+}
+
+function clearKey() {
+  API_KEY = '';
+  lsRemove('thinking_ai_key');
+  document.getElementById('api-key-input').value = '';
+  setKeyStatus(false);
+}
+
+function setKeyStatus(ok) {
+  const s = document.getElementById('key-status');
+  const c = document.getElementById('key-card');
+  if (ok) {
+    s.textContent = '✓ Key loaded';
+    s.className = 'key-status ok';
+    c.className = 'key-card ok';
+  } else {
+    s.textContent = '⚠ Not set — required';
+    s.className = 'key-status bad';
+    c.className = 'key-card bad';
+  }
+}
+
+function toggleKeyPanel() {
+  document.getElementById('key-body').classList.toggle('hidden');
+}
+
+function toggleKeyVis() {
+  const inp = document.getElementById('api-key-input');
+  const btn = document.getElementById('key-reveal-btn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+  else { inp.type = 'password'; btn.textContent = 'Show'; }
+}
+
+// ══════════════════════════════════════════════════════
+//  MODEL SELECTION
+// ══════════════════════════════════════════════════════
+// A dropdown rather than one hardcoded model — if a provider has an outage,
+// retires a model, or your key lacks access to one, you can switch instantly
+// without touching the code.
+
+const MODEL_NAMES = {
+  'google/gemini-3.5-flash':     'Gemini 3.5 Flash',
+  'google/gemini-3.1-flash-lite':'Gemini 3.1 Flash Lite',
+  'openai/gpt-5-mini':           'GPT-5 Mini',
+  'anthropic/claude-haiku-4.5':  'Claude Haiku 4.5',
+  'openrouter/free':             'Free (auto-routed)'
+};
+
+function modelDisplayName(slug) { return MODEL_NAMES[slug] || slug; }
+
+const DEFAULT_MODEL = 'google/gemini-3.5-flash';
+let SELECTED_MODEL = lsGet('thinking_ai_model') || DEFAULT_MODEL;
+
+function initModelUI() {
+  const sel = document.getElementById('model-select');
+  if (!sel) return;
+  const valid = Array.from(sel.options).some(o => o.value === SELECTED_MODEL);
+  if (!valid) SELECTED_MODEL = DEFAULT_MODEL;
+  sel.value = SELECTED_MODEL;
+  updateModelLabels();
+}
+
+function onModelChange() {
+  const sel = document.getElementById('model-select');
+  SELECTED_MODEL = sel.value;
+  lsSet('thinking_ai_model', SELECTED_MODEL);
+  updateModelLabels();
+}
+
+function updateModelLabels() {
+  const sub = document.getElementById('sub-text');
+  if (sub) sub.textContent = `${SELECTED_MODEL} · OpenRouter API · Device-Aware Context`;
+  const foot = document.getElementById('footer-model');
+  if (foot) foot.textContent = SELECTED_MODEL;
+}
+
 // ══════════════════════════════════════════════════════
 //  DEVICE CONTEXT ENGINE
 // ══════════════════════════════════════════════════════
 
-const D = {}; // Device context object
+const D = {}; 
 
 async function collectDevice() {
   const nav = navigator, scr = screen, now = new Date();
 
-  // Basic
   D.ua          = nav.userAgent;
   D.platform    = nav.platform || '—';
   D.language    = nav.language || '—';
@@ -442,17 +629,14 @@ async function collectDevice() {
   D.cookies     = nav.cookieEnabled;
   D.dnt         = nav.doNotTrack === '1';
 
-  // Screen
   D.screenW    = scr.width;
   D.screenH    = scr.height;
   D.colorDepth  = scr.colorDepth;
   D.dpr         = window.devicePixelRatio || 1;
 
-  // Hardware
   D.cores       = nav.hardwareConcurrency || '?';
   D.memory      = nav.deviceMemory ? nav.deviceMemory + ' GB' : '?';
 
-  // Time
   D.tz          = Intl.DateTimeFormat().resolvedOptions().timeZone;
   D.tzOffset    = 'UTC' + (now.getTimezoneOffset() > 0 ? '−' : '+') +
                   String(Math.abs(now.getTimezoneOffset() / 60)).padStart(2, '0') + ':00';
@@ -460,7 +644,6 @@ async function collectDevice() {
   D.localDate   = now.toLocaleDateString(undefined, {weekday:'long',year:'numeric',month:'long',day:'numeric'});
   D.isoDate     = now.toISOString().slice(0,10);
 
-  // Network
   const conn = nav.connection || nav.mozConnection || nav.webkitConnection;
   if (conn) {
     D.netType     = conn.effectiveType || conn.type || '?';
@@ -469,27 +652,22 @@ async function collectDevice() {
     D.saveData    = !!conn.saveData;
   }
 
-  // Preferences
   D.darkMode     = window.matchMedia('(prefers-color-scheme: dark)').matches;
   D.reducedMotion= window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Touch
   D.touch        = ('ontouchstart' in window || nav.maxTouchPoints > 0);
   D.touchPoints  = nav.maxTouchPoints || 0;
 
-  // Device type inference
   const ua = nav.userAgent.toLowerCase();
   D.deviceType  = /mobile|android|iphone|ipod/.test(ua) ? 'Mobile'
                 : /ipad|tablet/.test(ua) ? 'Tablet' : 'Desktop';
 
-  // Browser inference
   D.browser = /edg\//.test(ua) ? 'Edge'
             : /opr\/|opera/.test(ua) ? 'Opera'
             : /firefox/.test(ua) ? 'Firefox'
             : /chrome/.test(ua) ? 'Chrome'
             : /safari/.test(ua) ? 'Safari' : 'Unknown';
 
-  // OS inference
   D.os = /windows nt 10/.test(ua) ? 'Windows 10/11'
        : /windows/.test(ua) ? 'Windows'
        : /mac os x/.test(ua) ? 'macOS'
@@ -497,7 +675,6 @@ async function collectDevice() {
        : /android/.test(ua) ? 'Android'
        : /linux/.test(ua) ? 'Linux' : 'Unknown OS';
 
-  // Battery (async)
   if ('getBattery' in nav) {
     try {
       const b = await nav.getBattery();
@@ -553,7 +730,6 @@ function renderDevPanel() {
     `<div class="di"><div class="dl">${l}</div><div class="dv ${c}">${v || '—'}</div></div>`
   ).join('');
 
-  // Status bar
   const bar = document.createElement('div');
   bar.className = 'dev-status-bar';
   bar.innerHTML = D.lat != null
@@ -572,6 +748,10 @@ function toggleDev() {
 }
 
 function requestGeo() {
+  if (!navigator.geolocation) {
+    document.getElementById('geo-badge').innerHTML = `<div class="dot d-blue"></div>Location: unsupported`;
+    return;
+  }
   const btn = document.getElementById('geo-btn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Requesting…'; }
   navigator.geolocation.getCurrentPosition(
@@ -600,12 +780,9 @@ function requestGeo() {
 function buildSysPrompt() {
   const now = new Date();
   const lines = [
-    `You are a highly capable AI assistant with real-time internet access.`,
-    `RULE: You MUST use the web_search tool to get current information before answering any question.`,
-    `RULE: Search thoroughly — use multiple searches if needed for comprehensive answers.`,
-    `RULE: Cite where facts came from naturally in your response (e.g. "According to Reuters...").`,
+    `You are a highly capable AI assistant running on Gemini.`,
     `RULE: Write in plain text — no markdown symbols (* # ** ##). Use clear paragraphs.`,
-    `RULE: Be specific and detailed. Include numbers, dates, and key facts from search results.`,
+    `RULE: Be specific and detailed. Contextualize your answers based on user device metrics.`,
     ``,
     `═══ USER DEVICE CONTEXT ═══`,
     `Device Type : ${D.deviceType}`,
@@ -622,7 +799,7 @@ function buildSysPrompt() {
 
   if (D.lat != null) {
     lines.push(`GPS Location: ${D.lat.toFixed(6)}, ${D.lon.toFixed(6)} (±${D.geoAcc}m)`);
-    lines.push(`Use this GPS position for weather, local business, distances, and map-related queries.`);
+    lines.push(`Use this GPS position for local business, distances, and map-related queries.`);
   }
 
   lines.push(``, `═══ NETWORK & HARDWARE ═══`);
@@ -632,30 +809,24 @@ function buildSysPrompt() {
 
   lines.push(``);
   lines.push(`The user's local time is ${now.toLocaleTimeString()} — factor this into time-sensitive answers.`);
-  if (D.lat != null) lines.push(`The user is physically near coordinates (${D.lat.toFixed(3)}, ${D.lon.toFixed(3)}) — use for local recommendations.`);
-  if (D.languages !== 'en' && D.languages !== 'en-US' && !D.languages.startsWith('en')) {
-    lines.push(`The user's preferred language is ${D.languages} — respond in that language if appropriate.`);
-  }
-
+  
   return lines.join('\n');
 }
 
 // ══════════════════════════════════════════════════════
-//  PRESETS (device-aware)
+//  PRESETS
 // ══════════════════════════════════════════════════════
 
 function updatePresets() {
   const weatherQ = D.lat != null
-    ? `What is the current weather, temperature, and forecast for coordinates ${D.lat.toFixed(3)}, ${D.lon.toFixed(3)}?`
-    : `What is the current weather in Kerala, India right now?`;
+    ? `What is the typical weather for coordinates ${D.lat.toFixed(3)}, ${D.lon.toFixed(3)} at this time of year?`
+    : `What is the general climate in Kerala, India?`;
 
   const presetList = [
-    { label: '🌐 AI news today',   q: `What is the most important AI and technology news today, ${D.isoDate}?` },
-    { label: '₿ Bitcoin price',    q: `What is the current price of Bitcoin and major crypto market movements today?` },
-    { label: D.lat ? '🌤 My weather' : '☁ Kerala weather', q: weatherQ },
-    { label: '🏎 F1 latest',       q: `What is the latest Formula 1 race result, standings, and news as of ${D.isoDate}?` },
-    { label: '📰 Breaking news',   q: `What are the top 3 most important breaking news stories right now on ${D.localDate}?` },
-    { label: '📱 New phones 2026', q: `What are the best and newest smartphones announced or released in 2026 so far?` },
+    { label: '🧠 Explain Quantum AI', q: `Explain how quantum computing applies to AI models in simple terms.` },
+    { label: '📝 Draft an email',    q: `Draft an email to a client apologizing for a delay and offering a discount.` },
+    { label: D.lat ? '🌤 My climate' : '☁ Kerala climate', q: weatherQ },
+    { label: '🚀 Tech trends',       q: `What are the expected overarching technology trends for ${new Date().getFullYear()}?` },
   ];
 
   const row = document.getElementById('presets');
@@ -674,7 +845,6 @@ function updatePresets() {
 // ══════════════════════════════════════════════════════
 
 let t0 = 0, nSteps = 0, nSearches = 0, nTokens = 0, nSources = 0, nRounds = 0;
-const sources = [];
 
 function setStat(id, val) {
   const el = document.getElementById('sv-' + id);
@@ -704,199 +874,224 @@ function addStep(type, html) {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // ══════════════════════════════════════════════════════
-//  MAIN — MULTI-TURN WEB SEARCH ENGINE
+//  MAIN — OPENROUTER GENERATION ENGINE
 // ══════════════════════════════════════════════════════
 
+// requestGen lets us tell a "stale" request (superseded by Clear or a new
+// question) apart from the current one, so a slow/aborted old request can
+// never clobber the UI state of whatever the user is doing now.
+let requestGen = 0;
+let isGenerating = false;
+let currentController = null;
+let userCancelled = false;
+
+function handleThinkClick() {
+  if (isGenerating) stopGeneration();
+  else go();
+}
+
+function stopGeneration() {
+  userCancelled = true;
+  currentController?.abort();
+}
+
+function setThinkBtnState(state) {
+  const btn = document.getElementById('think-btn');
+  if (!btn) return;
+  if (state === 'stop') {
+    btn.textContent = '■ Stop';
+    btn.classList.add('stop');
+  } else {
+    btn.textContent = '▶ Think';
+    btn.classList.remove('stop');
+  }
+}
+
+// Normalizes the assistant message's content into a plain string. Different
+// models/providers occasionally shape `content` as an array of parts rather
+// than a flat string — handling both prevents a working-but-oddly-shaped
+// response from rendering as an empty answer.
+function extractContent(message) {
+  if (!message) return '';
+  const c = message.content;
+  if (typeof c === 'string') return c;
+  if (Array.isArray(c)) return c.map(p => (typeof p === 'string' ? p : (p?.text ?? ''))).join('');
+  return '';
+}
+
 async function go() {
+  if (isGenerating) return;
   const q = document.getElementById('q').value.trim();
   if (!q) return;
 
-  const btn = document.getElementById('think-btn');
-  btn.disabled = true;
+  if (!API_KEY || API_KEY === '' || API_KEY === 'YOUR_OPENROUTER_KEY_HERE') {
+    document.getElementById('key-body').classList.remove('hidden');
+    document.getElementById('key-card').style.boxShadow = '0 0 0 2px rgba(239,68,68,.5)';
+    setTimeout(() => document.getElementById('key-card').style.boxShadow = '', 1800);
+    document.getElementById('api-key-input').focus();
+    const ab = document.getElementById('ans-body');
+    ab.innerHTML = `<div class="err-box"><strong>API key missing.</strong><br>Open the file in a text editor and add your key to the <code>DEFAULT_API_KEY</code> variable, or paste it in the field above and click Save.</div>`;
+    document.getElementById('ans-panel').style.display = 'block';
+    return;
+  }
 
-  // Reset state
-  t0 = Date.now(); nSteps=0; nSearches=0; nTokens=0; nSources=0; nRounds=0; sources.length=0;
+  const myGen = ++requestGen;
+  const isCurrent = () => myGen === requestGen;
+  // A "step" only renders if this request is still the active one — this is
+  // what stops a stale, superseded request from writing leftover lines into
+  // a reasoning-trace panel that now belongs to a newer question.
+  const step = (type, html) => { if (isCurrent()) addStep(type, html); };
+
+  isGenerating = true;
+  userCancelled = false;
+  const controller = new AbortController();
+  currentController = controller;
+  setThinkBtnState('stop');
+
+  t0 = Date.now(); nSteps=0; nSearches=0; nTokens=0; nSources=0; nRounds=0;
   ['steps','searches','tokens','time','sources','rounds'].forEach(k => setStat(k, k==='time'?'0s':'0'));
   document.getElementById('steps').innerHTML = '';
   document.getElementById('think-panel').style.display = 'block';
   document.getElementById('ans-panel').style.display   = 'none';
   document.getElementById('pp').style.animationPlayState = 'running';
 
-  // Animate stats
   ['steps','searches','tokens','time','sources','rounds'].forEach(id => {
     document.getElementById('st-'+id).classList.remove('lit');
   });
 
-  // Context steps
-  addStep('device', `Device: <span class="hi">${D.deviceType}</span> · ${D.browser} on ${D.os} · <span class="hi">${D.screenW}×${D.screenH}</span> · ${D.cores} cores · ${D.memory} RAM`);
+  step('device', `Device: <span class="hi">${D.deviceType}</span> · ${D.browser} on ${D.os} · <span class="hi">${D.screenW}×${D.screenH}</span> · ${D.cores} cores · ${D.memory} RAM`);
   await sleep(180);
-  addStep('device', `Time: <span class="ok">${new Date().toLocaleTimeString()}</span> · <span class="hi">${D.tz}</span> · ${D.tzOffset}`);
+  step('device', `Time: <span class="ok">${new Date().toLocaleTimeString()}</span> · <span class="hi">${D.tz}</span> · ${D.tzOffset}`);
   await sleep(180);
 
   if (D.lat != null) {
-    addStep('device', `📍 GPS: <span class="ok">${D.lat.toFixed(4)}°N, ${D.lon.toFixed(4)}°E</span> ±${D.geoAcc}m — location injected into system prompt`);
+    step('device', `📍 GPS: <span class="ok">${D.lat.toFixed(4)}°N, ${D.lon.toFixed(4)}°E</span> ±${D.geoAcc}m — location injected into system prompt`);
     await sleep(140);
   }
 
   if (D.netType) {
-    addStep('net', `Network: <span class="hi">${D.netType}</span>${D.netDownlink ? ' · ' + D.netDownlink : ''} · Online: <span class="ok">${D.online?'Yes':'No'}</span>`);
+    step('net', `Network: <span class="hi">${D.netType}</span>${D.netDownlink ? ' · ' + D.netDownlink : ''} · Online: <span class="ok">${D.online?'Yes':'No'}</span>`);
     await sleep(140);
   }
 
-  if (D.battPct != null) {
-    addStep('device', `Battery: <span class="${D.battPct > 20 ? 'ok' : 'caut'}">${D.battPct}%</span> (${D.battCharge ? '⚡ charging' : 'discharging'})`);
-    await sleep(120);
-  }
-
-  addStep('think', `Question: <strong>${esc(q.slice(0,90))}${q.length>90?'…':''}</strong>`);
+  step('think', `Question: <strong>${esc(q.slice(0,90))}${q.length>90?'…':''}</strong>`);
   await sleep(200);
-  addStep('search', `<span class="caut">Activating web search</span> — fetching live internet data…`);
+  step('search', `<span class="caut">Sending authenticated request to OpenRouter (${esc(modelDisplayName(SELECTED_MODEL))})…</span>`);
 
-  // ─── API LOOP ────────────────────────────────────────
   const sysPrompt = buildSysPrompt();
-  const toolDef   = [{ type: 'web_search_20250305', name: 'web_search' }];
-  let messages    = [{ role: 'user', content: q }];
-  let finalText   = '';
-  const MAX_ROUNDS = 5;
+  const messages = [
+    { role: 'system', content: sysPrompt },
+    { role: 'user', content: q }
+  ];
+  let finalText = '';
+
+  // 45s safety net — without this, a hung network request leaves the button
+  // stuck on "Stop" forever with no way to recover except reloading the page.
+  const timeoutId = setTimeout(() => controller.abort(), 45000);
 
   try {
-    while (nRounds < MAX_ROUNDS) {
-      nRounds++;
-      setStat('rounds', nRounds);
-      litStat('rounds');
+    nRounds = 1;
+    setStat('rounds', nRounds);
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: sysPrompt,
-          tools: toolDef,
-          messages
-        })
-      });
+    // Safe header calculation ensuring local file paths don't send string "null"
+    const safeReferer = window.location.origin && window.location.origin !== 'null' ? window.location.origin : 'http://localhost';
 
-      if (!res.ok) {
-        const e = await res.json();
-        throw new Error(e.error?.message || `HTTP ${res.status}`);
-      }
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY.trim()}`,
+        'HTTP-Referer': safeReferer,
+        'X-Title': 'Thinking AI Engine'
+      },
+      body: JSON.stringify({
+        model: SELECTED_MODEL,
+        messages: messages
+      })
+    });
 
-      const data = await res.json();
-      const inTok  = data.usage?.input_tokens  || 0;
-      const outTok = data.usage?.output_tokens || 0;
-      nTokens += inTok + outTok;
-      setStat('tokens', nTokens.toLocaleString());
-      litStat('tokens');
-
-      // Process blocks
-      const toolUseBlocks = [];
-      let roundText = '';
-      let hasToolResults = false;
-
-      for (const block of data.content) {
-        if (block.type === 'tool_use' && block.name === 'web_search') {
-          nSearches++;
-          setStat('searches', nSearches);
-          litStat('searches');
-          const sq = block.input?.query || block.input?.q || '(search)';
-          addStep('search', `R${nRounds} · <span class="caut">Search:</span> "<span class="hi">${esc(sq)}</span>"`);
-          toolUseBlocks.push(block);
-          await sleep(140);
-
-        } else if (block.type === 'tool_result') {
-          hasToolResults = true;
-          addStep('check', `<span class="ok">Results received</span> · round ${nRounds} · analysing content…`);
-          litStat('searches');
-
-          // Extract sources
-          let raw = '';
-          if (Array.isArray(block.content)) {
-            for (const c of block.content) {
-              if (c.type === 'text') raw += c.text;
-              if (c.source?.url && !sources.includes(c.source.url)) sources.push(c.source.url);
-            }
-          } else if (typeof block.content === 'string') {
-            raw = block.content;
-          }
-          // URL extraction
-          const urls = (raw.match(/https?:\/\/[^\s"<>',\)\]]+/g) || []).slice(0, 6);
-          for (const u of urls) if (!sources.includes(u)) sources.push(u);
-          nSources = sources.length;
-          setStat('sources', nSources);
-          litStat('sources');
-          await sleep(130);
-
-        } else if (block.type === 'text' && block.text) {
-          roundText += block.text;
-        }
-      }
-
-      finalText += roundText;
-
-      // Done?
-      if (data.stop_reason === 'end_turn') {
-        addStep('think', `Round ${nRounds} complete — <span class="ok">stop: end_turn</span>`);
-        break;
-      }
-
-      if (data.stop_reason === 'tool_use') {
-        // Need another turn — append assistant turn and provide tool_results
-        addStep('think', `Round ${nRounds} — ${toolUseBlocks.length} search(es) triggered, continuing…`);
-        messages.push({ role: 'assistant', content: data.content });
-
-        // Build tool_result responses
-        const toolResults = toolUseBlocks.map(b => ({
-          type: 'tool_result',
-          tool_use_id: b.id,
-          content: 'Search results have been provided. Please analyze them and continue with your response.'
-        }));
-        messages.push({ role: 'user', content: toolResults });
-        await sleep(250);
-
-      } else if (data.stop_reason === 'max_tokens') {
-        addStep('warn', `<span class="caut">Token limit reached on round ${nRounds}</span>`);
-        break;
-      } else {
-        break;
-      }
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      const apiMsg = e?.error?.message;
+      let hint = '';
+      if (res.status === 401) hint = ' Your API key looks invalid — double-check it above.';
+      else if (res.status === 402) hint = ' Your OpenRouter account may be out of credits — try the free model above, or add credits.';
+      else if (res.status === 404) hint = ' This model may not exist or isn\u2019t available to your key — try a different one above.';
+      else if (res.status === 429) hint = ' Rate limited — wait a moment and try again.';
+      throw new Error((apiMsg || `HTTP ${res.status}: Connection rejected.`) + hint);
     }
 
-    // Finalize
-    addStep('think', 'Cross-checking facts, assembling final answer…');
+    const data = await res.json();
+    if (data?.error) throw new Error(data.error.message || 'The API returned an error.');
+    if (!isCurrent()) return;
+
+    const inTok  = data.usage?.prompt_tokens || 0;
+    const outTok = data.usage?.completion_tokens || 0;
+    nTokens = inTok + outTok;
+    setStat('tokens', nTokens.toLocaleString());
+    litStat('tokens');
+    litStat('rounds');
+
+    step('check', `<span class="ok">Handshake successful</span>. Received message array.`);
+    await sleep(130);
+
+    finalText = extractContent(data?.choices?.[0]?.message);
+
+    step('think', 'Processing text streaming engine…');
     await sleep(220);
-    addStep('final', `<span class="ok">Reasoning complete.</span> · <span class="pur">${nRounds} round(s)</span> · <span class="caut">${nSearches} search(es)</span> · <span class="hi">${nSources} source(s)</span>`);
+    step('final', `<span class="ok">Generation complete.</span> · <span class="pur">${esc(modelDisplayName(SELECTED_MODEL))}</span> · <span class="hi">${nTokens} tk</span>`);
+
+    if (!isCurrent()) return;
 
     document.getElementById('pp').style.animationPlayState = 'paused';
     litStat('steps');
     litStat('time');
 
     if (!finalText.trim()) {
-      finalText = '(No text was returned. The AI may have only performed searches. Please try again with a more specific question.)';
+      finalText = '(No text was returned by the model. It may have been filtered — try rephrasing, or switch models above.)';
     }
 
-    renderAnswer(finalText.trim(), [...new Set(sources)].slice(0, 10));
+    renderAnswer(finalText.trim());
     addToHistory(q);
 
   } catch (err) {
-    document.getElementById('pp').style.animationPlayState = 'paused';
-    addStep('warn', `<span class="err">Error: ${esc(err.message)}</span>`);
-    const ab = document.getElementById('ans-body');
-    ab.innerHTML = `<div class="err-box"><strong>Something went wrong:</strong><br>${esc(err.message)}<br><br>Check your internet connection and try again.</div>`;
-    document.getElementById('ans-panel').style.display = 'block';
+    if (isCurrent()) {
+      document.getElementById('pp').style.animationPlayState = 'paused';
+      let stepLabel = 'Request failed';
+      let msg = err?.message || 'Unknown error.';
+      let showHints = true;
+      if (err?.name === 'AbortError') {
+        showHints = false;
+        if (userCancelled) { stepLabel = 'Stopped by you'; msg = 'Generation was stopped.'; }
+        else { stepLabel = 'Timed out'; msg = 'No response after 45 seconds. The API or your connection may be slow — try again, or switch models above.'; }
+      }
+      step('warn', `<span class="err">${esc(stepLabel)}</span>`);
+      const ab = document.getElementById('ans-body');
+      const isStop = err?.name === 'AbortError' && userCancelled;
+      ab.innerHTML = `<div class="err-box"><strong>${isStop ? 'Stopped:' : 'Error:'}</strong><br>${esc(msg)}${showHints ? '<br><br>If this persists: confirm your key, check your OpenRouter credit balance, or try a different model above.' : ''}</div>`;
+      document.getElementById('ans-panel').style.display = 'block';
+    }
+  } finally {
+    clearTimeout(timeoutId);
+    if (isCurrent()) {
+      isGenerating = false;
+      currentController = null;
+      setThinkBtnState('idle');
+      tick();
+    }
   }
-
-  tick();
-  btn.disabled = false;
 }
 
 // ══════════════════════════════════════════════════════
-//  RENDER ANSWER — typewriter + sources + confidence
+//  RENDER ANSWER 
 // ══════════════════════════════════════════════════════
 
 let ansText = '';
+let renderGen = 0;
 
-function renderAnswer(text, srcs) {
+function renderAnswer(text) {
+  const myGen = ++renderGen;
   ansText = text;
   const ab = document.getElementById('ans-body');
   ab.innerHTML = '';
@@ -906,17 +1101,16 @@ function renderAnswer(text, srcs) {
   td.id = 'ans-text-el';
   ab.appendChild(td);
 
-  // Cursor
   const cur = document.createElement('span');
   cur.className = 'cursor-blink';
   cur.id = 'typcursor';
   ab.appendChild(cur);
 
-  // Typewriter
   let i = 0;
   const chunkSize = Math.max(1, Math.ceil(text.length / 220));
 
   const type = () => {
+    if (myGen !== renderGen) return; // a newer answer has taken over; abandon this loop
     if (i < text.length) {
       td.textContent = text.slice(0, i + chunkSize);
       i += chunkSize;
@@ -924,7 +1118,7 @@ function renderAnswer(text, srcs) {
     } else {
       td.textContent = text;
       cur.remove();
-      buildAnswerMeta(ab, srcs);
+      buildAnswerMeta(ab, myGen);
     }
   };
 
@@ -933,32 +1127,8 @@ function renderAnswer(text, srcs) {
   requestAnimationFrame(type);
 }
 
-function buildAnswerMeta(ab, srcs) {
-  // Sources
-  if (srcs.length > 0) {
-    const sdiv = document.createElement('div');
-    sdiv.className = 'sources-block';
-    const chips = srcs.map(src => {
-      try {
-        const u = new URL(src);
-        return `<a class="src-chip" href="${esc(src)}" target="_blank" rel="noopener noreferrer">↗ ${u.hostname.replace(/^www\./,'')}</a>`;
-      } catch { return ''; }
-    }).filter(Boolean).join('');
-    sdiv.innerHTML = `<div class="src-label">Sources (${srcs.length})</div><div class="src-chips">${chips}</div>`;
-    ab.appendChild(sdiv);
-  }
-
-  // Confidence
-  const conf = Math.min(96, 52 + nSearches * 9 + (srcs.length > 0 ? 8 : 0) + (D.lat != null ? 6 : 0));
-  const cdiv = document.createElement('div');
-  cdiv.className = 'conf-block';
-  cdiv.innerHTML = `
-    <div class="conf-bar"><div class="conf-fill" id="cf"></div></div>
-    <div class="conf-meta"><span>Response confidence</span><span>${conf}%</span></div>`;
-  ab.appendChild(cdiv);
-  setTimeout(() => { const f = document.getElementById('cf'); if (f) f.style.width = conf + '%'; }, 120);
-
-  // Meta
+function buildAnswerMeta(ab, myGen) {
+  if (myGen !== renderGen) return;
   const meta = document.createElement('div');
   meta.className = 'ans-meta';
   const wc = ansText.split(/\s+/).filter(Boolean).length;
@@ -977,23 +1147,47 @@ function buildAnswerMeta(ab, srcs) {
 // ══════════════════════════════════════════════════════
 
 async function copyAns() {
+  const b = document.getElementById('copy-btn');
   try {
-    await navigator.clipboard.writeText(ansText);
-    const b = document.getElementById('copy-btn');
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(ansText);
+    } else {
+      // Fallback for file:// pages or non-secure contexts where the modern
+      // Clipboard API may be unavailable.
+      const ta = document.createElement('textarea');
+      ta.value = ansText;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
     b.textContent = 'Copied!'; b.classList.add('done');
-    setTimeout(() => { b.textContent = 'Copy'; b.classList.remove('done'); }, 2200);
-  } catch(_) {}
+  } catch (_) {
+    b.textContent = 'Copy failed';
+  }
+  setTimeout(() => { b.textContent = 'Copy'; b.classList.remove('done'); }, 2200);
 }
 
 function speakAns() {
-  if (!window.speechSynthesis || !ansText) return;
+  const b = document.getElementById('speak-btn');
+  if (!window.speechSynthesis || !ansText) {
+    if (b) {
+      const orig = b.textContent;
+      b.textContent = 'Unsupported';
+      setTimeout(() => { b.textContent = orig; }, 1500);
+    }
+    return;
+  }
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(ansText.slice(0, 3000));
   u.lang = D.language || 'en-US';
   window.speechSynthesis.speak(u);
-  const b = document.getElementById('speak-btn');
   b.textContent = '⏸ Speaking'; b.classList.add('done');
   u.onend = () => { b.textContent = 'Speak'; b.classList.remove('done'); };
+  u.onerror = () => { b.textContent = 'Speak'; b.classList.remove('done'); };
 }
 
 // ══════════════════════════════════════════════════════
@@ -1016,7 +1210,7 @@ function renderHistory() {
   items.innerHTML = history.map((h, i) =>
     `<div class="hist-item" onclick="rerun(${i})">
       <div class="hq">${esc(h.q.slice(0,85))}${h.q.length>85?'…':''}</div>
-      <div class="hm">${h.srch}🔍 · ${h.tok.toLocaleString()}tk · ${h.t}</div>
+      <div class="hm">${h.tok.toLocaleString()}tk · ${h.t}</div>
     </div>`
   ).join('');
 }
@@ -1025,11 +1219,15 @@ function rerun(i) {
   if (history[i]) { document.getElementById('q').value = history[i].q; }
 }
 
-// ══════════════════════════════════════════════════════
-//  CLEAR
-// ══════════════════════════════════════════════════════
-
 function clearAll() {
+  requestGen++; // invalidate any in-flight request so it can no longer touch the UI
+  renderGen++;  // invalidate any in-flight typewriter animation
+  if (isGenerating) stopGeneration();
+  isGenerating = false;
+  currentController = null;
+  setThinkBtnState('idle');
+  window.speechSynthesis?.cancel();
+
   document.getElementById('q').value = '';
   document.getElementById('think-panel').style.display = 'none';
   document.getElementById('ans-panel').style.display   = 'none';
@@ -1039,35 +1237,22 @@ function clearAll() {
   ['steps','searches','tokens','time','sources','rounds'].forEach(id =>
     document.getElementById('st-'+id)?.classList.remove('lit')
   );
-  nSteps=0; nSearches=0; nTokens=0; nSources=0; nRounds=0; sources.length=0; ansText='';
+  nSteps=0; nSearches=0; nTokens=0; nSources=0; nRounds=0; ansText='';
+  const sb = document.getElementById('speak-btn');
+  if (sb) { sb.textContent = 'Speak'; sb.classList.remove('done'); }
 }
-
-// ══════════════════════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════════════════════
 
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ══════════════════════════════════════════════════════
-//  LIVE CLOCK
-// ══════════════════════════════════════════════════════
-
 function updateClock() {
   const el = document.getElementById('live-clock');
   if (el) el.textContent = new Date().toLocaleTimeString();
-  // Refresh device time in panel too
-  const rows = document.querySelectorAll('.dv.ok');
-  // (Time is re-rendered when device panel is opened)
 }
 
 setInterval(updateClock, 1000);
 updateClock();
-
-// ══════════════════════════════════════════════════════
-//  NETWORK MONITORING
-// ══════════════════════════════════════════════════════
 
 window.addEventListener('offline', () => {
   document.querySelector('.b-green').style.opacity = '0.4';
@@ -1081,20 +1266,18 @@ window.addEventListener('online', () => {
   D.online = true;
 });
 
-// ══════════════════════════════════════════════════════
-//  KEYBOARD
-// ══════════════════════════════════════════════════════
-
 document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); go(); }
-  if (e.key === 'Escape') { window.speechSynthesis?.cancel(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); handleThinkClick(); }
+  if (e.key === 'Escape') {
+    window.speechSynthesis?.cancel();
+    const b = document.getElementById('speak-btn');
+    if (b) { b.textContent = 'Speak'; b.classList.remove('done'); }
+  }
 });
 
-// ══════════════════════════════════════════════════════
-//  BOOT
-// ══════════════════════════════════════════════════════
-
-collectDevice();
+collectDevice().catch(err => console.error('Device collection failed:', err));
+initKeyUI();
+initModelUI();
 </script>
 </body>
 </html>
