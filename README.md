@@ -1,1 +1,1 @@
-formula.github.io
+formulafuntion-rgb.github.io
